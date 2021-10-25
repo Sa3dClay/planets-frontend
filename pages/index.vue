@@ -1,89 +1,72 @@
 <template>
-  <v-row justify="center" align="center">
-    <v-col cols="12" sm="8" md="6">
-      <div class="text-center">
-        <logo />
-        <vuetify-logo />
+  <div class="home">
+    <div class="overlay"></div>
+    <div class="home-content">
+      <h1 class="pa-8 font-weight-light">مرحباً بكوكب البطيخ</h1>
+
+      <!-- guest -->
+      <div v-if="!authenticated">
+        <!-- str login dialog -->
+        <v-dialog v-model="loginDialog" max-width="600">
+          <template v-slot:activator="{ on }">
+            <v-btn color="indigo" dark v-on="on"> تسجيل الدخول </v-btn>
+          </template>
+
+          <Login @toggleLogin="loginDialog = $event" />
+        </v-dialog>
+        <!-- end login dialog -->
+
+        <!-- str register dialog -->
+        <v-dialog v-model="registerDialog" max-width="600">
+          <template v-slot:activator="{ on }">
+            <v-btn color="green" dark v-on="on"> تسجيل حساب جديد </v-btn>
+          </template>
+
+          <Register @toggleRegister="registerDialog = $event" />
+        </v-dialog>
+        <!-- end register dialog -->
       </div>
-      <v-card>
-        <v-card-title class="headline">
-          Welcome to the Vuetify + Nuxt.js template
-        </v-card-title>
-        <v-card-text>
-          <p>Vuetify is a progressive Material Design component framework for Vue.js. It was designed to empower developers to create amazing applications.</p>
-          <p>
-            For more information on Vuetify, check out the <a
-              href="https://vuetifyjs.com"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              documentation
-            </a>.
-          </p>
-          <p>
-            If you have questions, please join the official <a
-              href="https://chat.vuetifyjs.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="chat"
-            >
-              discord
-            </a>.
-          </p>
-          <p>
-            Find a bug? Report it on the github <a
-              href="https://github.com/vuetifyjs/vuetify/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              title="contribute"
-            >
-              issue board
-            </a>.
-          </p>
-          <p>Thank you for developing with Vuetify and I look forward to bringing more exciting features in the future.</p>
-          <div class="text-xs-right">
-            <em><small>&mdash; John Leider</small></em>
-          </div>
-          <hr class="my-3">
-          <a
-            href="https://nuxtjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt Documentation
-          </a>
-          <br>
-          <a
-            href="https://github.com/nuxt/nuxt.js"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Nuxt GitHub
-          </a>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer />
-          <v-btn
-            color="primary"
-            nuxt
-            to="/inspire"
-          >
-            Continue
-          </v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-col>
-  </v-row>
+
+      <!-- user -->
+      <div v-else>
+        <h1 class="pa-8 font-weight-light">أهلاً بك {{ user.name }}</h1>
+        <v-btn color="red darken-2" dark @click.prevent="logout()">هل تود تسجيل الخروج؟</v-btn>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import Logo from '~/components/Logo.vue'
-import VuetifyLogo from '~/components/VuetifyLogo.vue'
+import Login from "~/components/auth/login.vue";
+import Register from "~/components/auth/register.vue";
 
 export default {
+  data() {
+    return {
+      loginDialog: false,
+      registerDialog: false,
+    };
+  },
+
   components: {
-    Logo,
-    VuetifyLogo
+    Login,
+    Register,
+  },
+
+  methods: {
+    // isLoggedIn() {
+    //   return this.$auth.$storage.getState('loggedIn')
+    // },
+    // getUser() {
+    //   return this.$auth.$storage.getState('user')
+    // },
+    logout() {
+      try {
+        this.$auth.logout()
+      } catch(e) {
+        console.log(e)
+      }
+    }
   }
-}
+};
 </script>
