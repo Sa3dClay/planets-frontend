@@ -69,6 +69,7 @@ export default {
         });
 
         this.toggle()
+        this.$router.push('/profile')
       } catch (e) {
         console.log(e);
       }

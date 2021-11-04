@@ -1,4 +1,4 @@
-import colors from 'vuetify/es5/util/colors'
+// import colors from 'vuetify/es5/util/colors'
 
 export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
@@ -50,36 +50,43 @@ export default {
   axios: {
     baseURL: "http://localhost:8000/api"
   },
-  // publicRuntimeConfig: {
-  //   axios: {
-  //     browserBaseURL: process.env.BROWSER_BASE_URL
-  //   }
-  // },
-  // privateRuntimeConfig: {
-  //   axios: {
-  //     baseURL: process.env.BASE_URL
-  //   }
-  // },
+  publicRuntimeConfig: {
+    axios: {
+      browserBaseURL: process.env.BROWSER_BASE_URL
+    }
+  },
+  privateRuntimeConfig: {
+    axios: {
+      baseURL: process.env.BASE_URL
+    }
+  },
 
   // Auth module configuration (https://auth.nuxtjs.org/guide/setup)
   auth: {
+    // scopeKey: 'role',
+    redirect: {
+      home: '/',
+      login: '/',
+      logout: '/',
+      callback: '/',
+    },
     strategies: {
       local: {
         token: {
           property: 'meta.token',
           global: true,
-          // required: true,
-          // type: 'Bearer'
+          required: true,
+          type: 'Bearer',
         },
         user: {
           property: 'data',
-          // autoFetch: true
+          autoFetch: true,
         },
         endpoints: {
-          user: { url: '/user', method: 'get' },
-          login: { url: '/login', method: 'post' },
-          logout: { url: '/logout', method: 'post' },
-          register: { url: '/register', method: 'post' },
+          user: { url: 'auth/user', method: 'get' },
+          login: { url: 'auth/login', method: 'post' },
+          logout: { url: 'auth/logout', method: 'post' },
+          register: { url: 'auth/register', method: 'post' },
         }
       }
     }

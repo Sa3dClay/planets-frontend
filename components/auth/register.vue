@@ -13,18 +13,16 @@
             </v-btn>
           </v-toolbar>
 
-          <v-card-text>
-            <v-form>
+          <v-form>
+            <v-card-text>
               <v-text-field
                 prepend-icon="mdi-account"
-                name="name"
                 label="اسم المستخدم"
                 type="text"
               ></v-text-field>
 
               <v-text-field
                 prepend-icon="mdi-email"
-                name="email"
                 label="عنوان البريد"
                 type="email"
               ></v-text-field>
@@ -32,18 +30,17 @@
               <v-text-field
                 id="password"
                 prepend-icon="mdi-lock"
-                name="password"
                 label="الرقم السري"
                 type="password"
               ></v-text-field>
-            </v-form>
-          </v-card-text>
+            </v-card-text>
 
-          <v-card-actions>
-            <v-spacer></v-spacer>
+            <v-card-actions>
+              <v-spacer></v-spacer>
 
-            <v-btn color="primary">تسجيل</v-btn>
-          </v-card-actions>
+              <v-btn color="primary">تسجيل</v-btn>
+            </v-card-actions>
+          </v-form>
         </v-card>
       </v-flex>
     </v-layout>

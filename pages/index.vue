@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <div class="overlay"></div>
+
     <div class="home-content">
       <h1 class="pa-8 font-weight-light">مرحباً بكوكب البطيخ</h1>
 
@@ -9,7 +10,7 @@
         <!-- str login dialog -->
         <v-dialog v-model="loginDialog" max-width="600">
           <template v-slot:activator="{ on }">
-            <v-btn color="indigo" dark v-on="on"> تسجيل الدخول </v-btn>
+            <v-btn class="mx-2" color="indigo" dark v-on="on"> تسجيل الدخول </v-btn>
           </template>
 
           <Login @toggleLogin="loginDialog = $event" />
@@ -19,7 +20,7 @@
         <!-- str register dialog -->
         <v-dialog v-model="registerDialog" max-width="600">
           <template v-slot:activator="{ on }">
-            <v-btn color="green" dark v-on="on"> تسجيل حساب جديد </v-btn>
+            <v-btn class="mx-2" color="green" dark v-on="on"> تسجيل حساب جديد </v-btn>
           </template>
 
           <Register @toggleRegister="registerDialog = $event" />
@@ -30,6 +31,7 @@
       <!-- user -->
       <div v-else>
         <h1 class="pa-8 font-weight-light">أهلاً بك {{ user.name }}</h1>
+        
         <v-btn color="red darken-2" dark @click.prevent="logout()">هل تود تسجيل الخروج؟</v-btn>
       </div>
     </div>
