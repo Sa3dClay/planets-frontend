@@ -1,7 +1,7 @@
 @font-face {
     font-family: "Harmattan";
     src: local("Harmattan"),
-     url(~assets/fonts/Harmattan-Regular.ttf) format("truetype");
+    url(~assets/fonts/Harmattan-Regular.ttf) format("truetype");
 }
 
 * {
