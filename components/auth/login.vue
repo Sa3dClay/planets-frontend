@@ -1,7 +1,7 @@
 <template>
   <v-container fluid fill-height>
     <v-layout align-center justify-center>
-      <v-flex xs12 sm8 md6>
+      <v-flex xs12 sm8 md10>
         <v-form @submit.prevent="submitLogin()">
           <v-card class="elevation-12">
             <v-toolbar dark color="primary">
@@ -9,7 +9,6 @@
 
               <v-spacer></v-spacer>
 
-              <!-- <v-btn icon @click="loginDialog = false"> -->
               <v-btn icon @click="toggle()">
                 <v-icon>mdi-close</v-icon>
               </v-btn>
@@ -19,9 +18,9 @@
               <v-text-field
                 v-model.trim="loginForm.email"
                 prepend-icon="mdi-email"
-                name="email"
                 label="عنوان البريد"
                 type="email"
+                dir="ltr"
                 required
               ></v-text-field>
 
@@ -29,7 +28,6 @@
                 v-model.trim="loginForm.password"
                 id="password"
                 prepend-icon="mdi-lock"
-                name="password"
                 label="الرقم السري"
                 type="password"
                 required
@@ -60,20 +58,41 @@ export default {
 
   methods: {
     toggle() {
-      this.$emit("toggleLogin", false);
+      this.$emit("toggleLogin", false)
     },
     async submitLogin() {
       try {
         await this.$auth.loginWith("local", {
           data: this.loginForm,
-        });
+        })
+
+        this.$swal({
+          icon: 'success',
+          title: 'أهلاً بك من جديد',
+          showConfirmButton: false,
+          timer: 1500
+        })
 
         this.toggle()
-        this.$router.push('/profile')
+
+        if(this.user.role == 0) {
+          this.$router.push('/admin')
+        } else {
+          this.$router.push('/profile')
+        }
       } catch (e) {
-        console.log(e);
+        console.log(e)
+
+        this.$swal({
+          icon: 'error',
+          title: 'عذراً، تأكد من صحة بياناتك',
+          text: e,
+          showConfirmButton: true,
+          confirmButtonText: 'حسناً',
+          confirmButtonColor: '#3498db'
+        })
       }
     },
   },
-};
+}
 </script>
