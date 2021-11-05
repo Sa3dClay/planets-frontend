@@ -44,6 +44,7 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
+    'vue-sweetalert2/nuxt',
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
@@ -63,7 +64,6 @@ export default {
 
   // Auth module configuration (https://auth.nuxtjs.org/guide/setup)
   auth: {
-    // scopeKey: 'role',
     redirect: {
       home: '/',
       login: '/',
