@@ -35,6 +35,24 @@
             >
             </v-text-field>
 
+            <v-radio-group
+              v-model="form.planet"
+              :rules="planetRules"
+              row
+            >
+              <v-radio
+                label="زحل"
+                value="saturn"
+              ></v-radio>
+              <img src="~/assets/img/saturn.png" width="auto" height="50" class="ml-2" />
+
+              <v-radio
+                label="المريخ"
+                value="mars"
+              ></v-radio>
+              <img src="~/assets/img/jupiter.png" width="auto" height="50" class="ml-2" />
+            </v-radio-group>
+
             <v-btn type="submit" color="yellow" :disabled="!valid"
               >تحديث البيانات</v-btn
             >
@@ -53,7 +71,8 @@ export default {
     valid: false,
     form: {
       name: '',
-      email: ''
+      email: '',
+      planet: '',
     },
     nameRules: [
       v => !!v || 'Name is required',
@@ -63,6 +82,9 @@ export default {
       v => !!v || 'E-mail is required',
       v => /.+@.+/.test(v) || 'E-mail must be valid',
     ],
+    planetRules: [
+      v => !!v || 'رجاء اختيار الكوكب',
+    ]
   }),
 
   mounted() {
@@ -73,12 +95,48 @@ export default {
     fillForm() {
       this.form.name = this.user.name
       this.form.email = this.user.email
+      this.form.planet = this.user.planet
     },
     async updateUser() {
+      // check if no change
+      if(
+        this.form.name == this.user.name &&
+        this.form.email == this.user.email &&
+        this.form.planet == this.user.planet
+      ) {
+        this.$swal({
+          icon: 'warning',
+          title: 'لم يتم تغيير أي بيانات',
+          showConfirmButton: false,
+          timer: 1500
+        })
+
+        return true
+      }
+
       const id = this.user.id
     
       try {
         await this.$axios.post('/users/'+id, this.form)
+          .then((res) => {
+            // console.log(res.data)
+
+            try {
+              // method 1 nuxt auth
+              this.$auth.setUser(res.data.data)
+  
+              // method 2 vuex mutations
+              // this.$store.commit('updateUserName', res.data.data.name)
+              // this.$store.commit('updateUserEmail', res.data.data.email)
+              // this.$store.commit('updateUserPlanet', res.data.data.planet)
+            }
+            catch (e) {
+              console.log(e)
+            }
+          })
+          .catch((e) => {
+            console.log(e)
+          })
 
         this.$swal({
           icon: 'success',
@@ -86,6 +144,8 @@ export default {
           showConfirmButton: false,
           timer: 1500
         })
+
+        this.$router.push('/profile')
       }
       catch(e) {
         console.log(e)

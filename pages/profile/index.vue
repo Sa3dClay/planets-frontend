@@ -5,9 +5,9 @@
       <span>{{ user.planet == 'saturn' ? 'الزوحلي' : 'المريخي' }}</span>
     </h1>
 
-    <v-card class="my-4">
+    <v-card class="my-4" elevation="4">
       <v-row justify="center" align="center">
-        <v-col cols="10" sm="4">
+        <v-col cols="10" sm="3">
           <div v-if="user.planet == 'saturn'">
             <v-img
               :src="require(`~/assets/img/saturn.png`)"

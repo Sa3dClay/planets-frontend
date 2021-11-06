@@ -21,7 +21,6 @@
                 type="text"
                 v-model="registerForm.name"
                 :rules="nameRules"
-                required
               ></v-text-field>
 
               <v-text-field
@@ -31,7 +30,6 @@
                 v-model="registerForm.email"
                 :rules="emailRules"
                 dir="ltr"
-                required
               ></v-text-field>
 
               <v-text-field
@@ -42,7 +40,6 @@
                 @click:append="showPassword = !showPassword"
                 v-model="registerForm.password"
                 :rules="passwordRules"
-                required
               ></v-text-field>
 
               <v-text-field
@@ -53,8 +50,25 @@
                 @click:append="showPassword = !showPassword"
                 v-model="registerForm.confirmPassword"
                 :rules="[registerForm.confirmPassword === registerForm.password || 'الرقم السري غير متطابق']"
-                required
               ></v-text-field>
+
+              <v-radio-group
+                v-model="registerForm.planet"
+                :rules="planetRules"
+                row
+              >
+                <v-radio
+                  label="زحل"
+                  value="saturn"
+                ></v-radio>
+                <img src="~/assets/img/saturn.png" width="auto" height="50" class="ml-2" />
+
+                <v-radio
+                  label="المريخ"
+                  value="mars"
+                ></v-radio>
+                <img src="~/assets/img/jupiter.png" width="auto" height="50" class="ml-2" />
+              </v-radio-group>
             </v-card-text>
 
             <v-card-actions>
@@ -82,6 +96,7 @@ export default {
     registerForm: {
       name: '',
       email: '',
+      planet: '',
       password: '',
       confirmPassword: '',
     },
@@ -97,6 +112,9 @@ export default {
       v => !!v || 'رجاء ادخال الرقم السري',
       v => v.length >= 8 || 'الرقم السري يجب ان لا يقل عن ثمانية أحرف',
     ],
+    planetRules: [
+      v => !!v || 'رجاء اختيار الكوكب',
+    ]
   }),
 
   methods: {
@@ -104,7 +122,7 @@ export default {
       this.$emit('toggleRegister', false)
     },
     async submitRegister() {
-      console.log('you hit register')
+      console.log('you hit register', this.registerForm.planet)
 
       try {
         await this.$axios.post('auth/register', this.registerForm)
