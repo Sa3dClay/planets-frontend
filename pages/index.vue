@@ -29,7 +29,8 @@
     <div v-else>
       <h1 class="pa-8 font-weight-light">أهلاً بك {{ user.name }}</h1>
       
-      <v-btn color="red darken-2" dark @click.prevent="logout()">هل تود تسجيل الخروج؟</v-btn>
+      <v-btn color="blue darken-2" dark to="/chat">تحدث مع الأصدقاء</v-btn>
+      <v-btn color="red darken-2" dark @click.prevent="logout()">تسجيل الخروج</v-btn>
     </div>
   </div>
 </template>
