@@ -65,7 +65,7 @@
 
                 <v-radio
                   label="المريخ"
-                  value="mars"
+                  value="jupiter"
                 ></v-radio>
                 <img src="~/assets/img/jupiter.png" width="auto" height="50" class="ml-2" />
               </v-radio-group>
