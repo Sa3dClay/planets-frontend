@@ -1,5 +1,5 @@
 <template>
-  <div class="chat">
+  <div class="chatPage">
     <h1 class="my-4 font-weight-light">الدردشة مع الأصدقاء تحت الإنشاء!</h1>
 
     <!-- str caht -->
@@ -21,11 +21,11 @@
         <!-- end toolbar -->
 
         <!-- str list -->
-        <v-list v-chat-scroll three-line>
+        <!-- <v-list v-chat-scroll class="chat">
           <v-list-item
             v-for="(message, index) in chat.messages"
             :key="index"
-            dir="ltr"
+            :dir="message.userId == user.id ? 'rtl' : 'ltr'"
           >
             <v-list-item-avatar v-if="isDiffUser(index)">
               <div v-if="message.avatar == 'saturn'">
@@ -40,15 +40,63 @@
             <v-list-item-content class="pa-0">
               <v-list-item-title
                 class="text-left pl-2"
-                v-if="isDiffUser(index)"
+                v-if="isDiffUser(index) && message.userId !== user.id"
                 v-html="message.userName"
               ></v-list-item-title>
 
               <v-list-item-subtitle class="text--primary" v-html="message.userMessage"></v-list-item-subtitle>
             </v-list-item-content>
           </v-list-item>
-        </v-list>
+        </v-list> -->
         <!-- end list -->
+
+        <!-- str chat -->
+        <div class="chat pa-8" v-chat-scroll>
+          <v-row
+            v-for="(message, index) in chat.messages"
+            :key="index"
+            :dir="message.userId == user.id ? 'rtl' : 'ltr'"
+          >
+            <v-col class="pa-0 ma-0" cols="2">
+              <v-responsive v-if="isDiffUser(index)">
+                <v-img
+                  width="40"
+                  v-if="message.avatar == 'saturn'"
+                  :src="require('~/assets/img/saturn.png')"
+                  :alt="message.avatar"
+                ></v-img>
+
+                <v-img
+                  width="40"
+                  v-else
+                  :src="require('~/assets/img/jupiter.png')"
+                  :alt="message.avatar"
+                ></v-img>
+
+                <p
+                  v-if="message.userId !== user.id"
+                  class="py-0 px-4 ma-0 text-left"
+                >{{ message.userName }}</p>  
+              </v-responsive>
+            </v-col>
+
+            <!-- <v-col
+              cols="2"
+              class="pa-1 ma-0"
+              v-if="isDiffUser(index) && message.userId !== user.id"
+            >
+              <p class="py-0 px-4 ma-0 text-left">{{ message.userName }}</p>
+            </v-col> -->
+
+            <v-col cols="10" class="pa-1 ma-0">
+              <p
+                class="py-0 px-4 ma-0 textMessage d-inline-block"
+                :class="message.userId == user.id ? 'float-right' : 'float-left'"
+              >{{ message.userMessage }}</p>
+            </v-col>
+          </v-row>
+        </div>
+        <!-- end chat -->
 
         <!-- str form -->
         <v-form class="pa-4">
@@ -72,24 +120,14 @@
 </template>
 
 <script>
+
 export default {
   middleware: "auth",
 
   data: () => ({
     typeMessage: '',
     chat: { 
-      messages: [
-        {
-          avatar: 'saturn',
-          userName: 'Summer BBQ',
-          userMessage: `Wish I could come, but I'm out of town this weekend.`,
-        },
-        {
-          avatar: 'jupiter',
-          userName: 'Oui oui',
-          userMessage: `Do you have Paris recommendations? Have you ever been?`,
-        },
-      ],
+      messages: []
     }
   }),
 
@@ -97,14 +135,19 @@ export default {
     sendMessage() {
       console.log(this.typeMessage)
 
-      let newUserMessage = {
-        avatar: this.user.planet,
-        userName: this.user.name,
-        userMessage: this.typeMessage
-      }
-      this.chat.messages.push(newUserMessage)
+      this.$axios.post('/sendMessage', {
+          message: this.typeMessage
+        })
+          .then((res) => {
+            console.log(res)
+            
+            this.addNewMessage(this.user, this.typeMessage)
 
-      this.typeMessage = ''
+            this.typeMessage = ''
+          })
+          .catch((err) => {
+            console.log(err)
+          })
     },
     isDiffUser(index) {
       if(index == 0) {
@@ -119,7 +162,38 @@ export default {
       } else {
         return true
       }
-    }
-  }
+    },
+    addNewMessage(user, message) {
+      let newUserMessage = {
+        userId: user.id,
+        avatar: user.planet,
+        userName: user.name,
+        userMessage: message
+      }
+
+      this.chat.messages.push(newUserMessage)
+    },
+  },
+
+  mounted() {
+    this.$echo.channel(`chat`)
+      .on(`chat-event`, (e) => {
+        if(e.user.id !== this.user.id) {
+          this.addNewMessage(e.user, e.message)
+        }
+      })
+      // .listenForWhisper('typing', (e) => {
+      //   console.log(e.name);
+      // })
+  },
+
+  watch: {
+    // typeMessage() {
+    //   this.$echo.private(`chat`)
+    //     .whisper('typing', {
+    //       name: this.typeMessage
+    //     })
+    // },
+  },
 }
 </script>
