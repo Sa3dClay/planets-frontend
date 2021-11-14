@@ -135,13 +135,13 @@ export default {
 
   methods: {
     sendMessage() {
-      console.log(this.typeMessage)
+      // console.log(this.typeMessage)
 
       this.$axios.post('/sendMessage', {
           message: this.typeMessage
         })
           .then((res) => {
-            console.log(res)
+            // console.log(res)
             
             this.addNewMessage(this.user, this.typeMessage)
 
