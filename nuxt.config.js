@@ -61,7 +61,7 @@ export default {
     // baseURL: "http://localhost:8000/api"
 
     // fordeployment
-    baseURL: "https://planets-server.herokuapp.com/"
+    baseURL: "https://planets-server.herokuapp.com/api"
   },
 
   // Auth module configuration (https://auth.nuxtjs.org/guide/setup)
