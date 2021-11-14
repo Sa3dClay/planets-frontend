@@ -35,8 +35,17 @@ export default {
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
     // '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify'
+    '@nuxtjs/vuetify',
+    '@nuxtjs/laravel-echo',
   ],
+
+  echo: {
+    broadcaster: 'pusher',
+    key: 'bf1c49047275628bd29d',
+    cluster: 'eu',
+    forceTLS: true,
+    plugins: ['~/plugins/echo.js']
+  },
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
@@ -49,16 +58,6 @@ export default {
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
     baseURL: "http://localhost:8000/api"
-  },
-  publicRuntimeConfig: {
-    axios: {
-      browserBaseURL: process.env.BROWSER_BASE_URL
-    }
-  },
-  privateRuntimeConfig: {
-    axios: {
-      baseURL: process.env.BASE_URL
-    }
   },
 
   // Auth module configuration (https://auth.nuxtjs.org/guide/setup)
