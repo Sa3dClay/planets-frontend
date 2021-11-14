@@ -57,10 +57,11 @@
             :key="index"
             :dir="message.userId == user.id ? 'rtl' : 'ltr'"
           >
-            <v-col class="pa-0 ma-0" cols="2">
+            <v-col class="pa-0 ma-0" cols="3">
               <v-responsive v-if="isDiffUser(index)">
                 <v-img
                   width="40"
+                  class="d-block mx-auto"
                   v-if="message.avatar == 'saturn'"
                   :src="require('~/assets/img/saturn.png')"
                   :alt="message.avatar"
@@ -68,6 +69,7 @@
 
                 <v-img
                   width="40"
+                  class="d-block mx-auto"
                   v-else
                   :src="require('~/assets/img/jupiter.png')"
                   :alt="message.avatar"
@@ -75,7 +77,7 @@
 
                 <p
                   v-if="message.userId !== user.id"
-                  class="py-0 px-4 ma-0 text-left"
+                  class="py-0 px-4 ma-0 text-center"
                 >{{ message.userName }}</p>  
               </v-responsive>
             </v-col>
@@ -88,10 +90,10 @@
               <p class="py-0 px-4 ma-0 text-left">{{ message.userName }}</p>
             </v-col> -->
 
-            <v-col cols="10" class="pa-1 ma-0">
+            <v-col cols="9" class="pa-1 ma-0">
               <p
                 class="py-0 px-4 ma-0 textMessage d-inline-block"
-                :class="message.userId == user.id ? 'float-right' : 'float-left'"
+                :class="message.userId == user.id ? 'float-right selfMessage' : 'float-left otherMessage'"
               >{{ message.userMessage }}</p>
             </v-col>
           </v-row>
@@ -149,6 +151,23 @@ export default {
             console.log(err)
           })
     },
+
+    getMessages() {
+      this.$axios.get('/getMessages')
+        .then(res => {
+          // console.log(res.data.messages)
+
+          let messages = res.data.messages
+
+          if(messages.length > 0) {
+            this.showMessages(messages)
+          }
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
     isDiffUser(index) {
       if(index == 0) {
         return true
@@ -163,6 +182,17 @@ export default {
         return true
       }
     },
+
+    showMessages(messages) {
+      // console.log(messages)
+
+      messages.forEach(oldMessage => {
+        // console.log(oldMessage.user, oldMessage.message)
+
+        this.addNewMessage(oldMessage.user, oldMessage.message)
+      })
+    },
+
     addNewMessage(user, message) {
       let newUserMessage = {
         userId: user.id,
@@ -176,6 +206,8 @@ export default {
   },
 
   mounted() {
+    this.getMessages()
+
     this.$echo.channel(`chat`)
       .on(`chat-event`, (e) => {
         if(e.user.id !== this.user.id) {

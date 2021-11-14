@@ -35,7 +35,12 @@
 .textMessage {
     color: #fff;
     border-radius: 20px;
+}
+.selfMessage {
     background-color: #3498db;
+}
+.otherMessage {
+    background-color: #3F51B5;
 }
 
 ::-webkit-scrollbar {
