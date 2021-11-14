@@ -57,7 +57,11 @@ export default {
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    baseURL: "http://localhost:8000/api"
+    // for development
+    // baseURL: "http://localhost:8000/api"
+
+    // fordeployment
+    baseURL: "https://planets-server.herokuapp.com/"
   },
 
   // Auth module configuration (https://auth.nuxtjs.org/guide/setup)
