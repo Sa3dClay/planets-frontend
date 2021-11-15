@@ -1,18 +1,31 @@
 @font-face {
-    font-family: "Harmattan";
-    src: local("Harmattan"),
+    font-family: "main";
+    src: local("main"),
     url(~assets/fonts/Harmattan-Regular.ttf) format("truetype");
+}
+@font-face {
+    font-family: "secondary";
+    src: local("secondary"),
+    url(~assets/fonts/Vibes-Regular.ttf) format("truetype");
 }
 
 * {
-    font-family: "Harmattan";
+    font-family: "main";
+}
+
+.myFont {
+    font-weight: 300;
+    line-height: 3.75rem;
+    font-size: 3.75rem !important;
+    font-family: "secondary" !important;
+    letter-spacing: -0.0083333333em !important;
 }
 
 .pg {
     position: relative;
     background-image: url(~assets/img/pg.jpg);
     background-size: cover;
-    min-height: 600px;
+    min-height: 800px;
 }
 .pg-content {
     position: relative;

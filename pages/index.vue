@@ -1,6 +1,6 @@
 <template>
-  <div class="home">
-    <h1 class="pa-8 font-weight-light">مرحباً بكوكب البطيخ</h1>
+  <div class="homePage">
+    <h1 class="py-12 myFont">مرحباً بكوكب البطيخ</h1>
 
     <!-- guest -->
     <div v-if="!authenticated">
@@ -27,10 +27,7 @@
 
     <!-- user -->
     <div v-else>
-      <h1 class="pa-8 font-weight-light">أهلاً بك {{ user.name }}</h1>
-      
-      <v-btn color="blue darken-2" dark to="/chat">تحدث مع الأصدقاء</v-btn>
-      <v-btn color="red darken-2" dark @click.prevent="logout()">تسجيل الخروج</v-btn>
+      <h1 class="py-8 myFont">أهلًا بك {{ user.name }}</h1>
     </div>
   </div>
 </template>
@@ -46,26 +43,9 @@ export default {
       registerDialog: false,
     }
   },
-
   components: {
     Login,
     Register,
   },
-
-  methods: {
-    // isLoggedIn() {
-    //   return this.$auth.$storage.getState('loggedIn')
-    // },
-    // getUser() {
-    //   return this.$auth.$storage.getState('user')
-    // },
-    logout() {
-      try {
-        this.$auth.logout()
-      } catch(e) {
-        console.log(e)
-      }
-    }
-  }
 };
 </script>

@@ -1,8 +1,8 @@
 <template>
-  <div class="user">
-    <h1 class="py-8 text-center font-weight-light">
+  <div class="userPage">
+    <h1 class="py-12 text-center myFont">
       مرحباً بك أيها
-      <span>{{ user.planet == 'saturn' ? 'الزوحلي' : 'المريخي' }}</span>
+      <span class="myFont">{{ user.planet == 'saturn' ? 'الزوحلي' : 'المريخي' }}</span>
     </h1>
 
     <v-card class="my-4" elevation="4">
@@ -10,6 +10,8 @@
         <v-col cols="10" sm="3">
           <div v-if="user.planet == 'saturn'">
             <v-img
+              max-width="100"
+              class="mx-auto"
               :src="require(`~/assets/img/saturn.png`)"
             ></v-img>
           </div>
