@@ -65,9 +65,9 @@ export default {
     links: [
       { title: 'الرئيسية', icon: 'mdi-home', route: '/' },
       { title: 'الصفحة الشخصية', icon: 'mdi-account', route: '/profile' },
-      { title: 'تحدث مع الأصدقاء', icon: 'mdi-account-group', route: '/chat' },
-    ],
-  }),
+      { title: 'تحدث مع الأصدقاء', icon: 'mdi-message-outline', route: '/chat' }
+    ]
+  }),  
   methods: {
     logout() {
       try {

@@ -18,9 +18,15 @@ export default {
     ]
   },
 
-  // Global CSS (https://go.nuxtjs.dev/config-css)
+  // Global CSS
   css: [
-    "~layouts/style.css",
+    "~layouts/style.css"
+  ],
+
+  // Global JS
+  script: [
+    'https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js',
+    '~assets/js/script.js'
   ],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
@@ -35,8 +41,8 @@ export default {
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
     // '@nuxtjs/eslint-module',
-    '@nuxtjs/vuetify',
     '@nuxtjs/laravel-echo',
+    '@nuxtjs/vuetify'
   ],
 
   echo: {
@@ -52,16 +58,16 @@ export default {
     '@nuxtjs/pwa',
     '@nuxtjs/axios',
     '@nuxtjs/auth-next',
-    'vue-sweetalert2/nuxt',
+    'vue-sweetalert2/nuxt'
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    // for development
-    // baseURL: "http://localhost:8000/api"
+    // for deployment
+    // baseURL: "https://planets-server.herokuapp.com/api",
 
-    // fordeployment
-    baseURL: "https://planets-server.herokuapp.com/api"
+    // for development
+    baseURL: process.env.baseURL || "http://localhost:8000/api"
   },
 
   // Auth module configuration (https://auth.nuxtjs.org/guide/setup)
@@ -70,7 +76,7 @@ export default {
       home: '/',
       login: '/',
       logout: '/',
-      callback: '/',
+      callback: '/'
     },
     strategies: {
       local: {
@@ -78,17 +84,17 @@ export default {
           property: 'meta.token',
           global: true,
           required: true,
-          type: 'Bearer',
+          type: 'Bearer'
         },
         user: {
           property: 'data',
-          autoFetch: true,
+          autoFetch: true
         },
         endpoints: {
           user: { url: 'auth/user', method: 'get' },
           login: { url: 'auth/login', method: 'post' },
           logout: { url: 'auth/logout', method: 'post' },
-          register: { url: 'auth/register', method: 'post' },
+          register: { url: 'auth/register', method: 'post' }
         }
       }
     }
