@@ -54,15 +54,85 @@
 
             <v-col cols="9" class="pa-1 ma-0">
               <p
-                class="py-0 px-4 ma-0 textMessage d-inline-block"
+                class="py-1 px-4 ma-0 textMessage d-inline-block"
                 :class="message.userId == user.id ? 'float-right selfMessage' : 'float-left otherMessage'"
               >{{ message.userMessage }}</p>
+
+              <v-menu v-if="message.userId == user.id">
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn
+                    v-on="on"
+                    v-bind="attrs"
+                    color="primary"
+                    dark
+                    icon
+                  >
+                    <v-icon>mdi-dots-horizontal</v-icon>
+                  </v-btn>
+                </template>
+
+                <v-list>
+                  <v-list-item dense>
+                    <v-list-item-icon>
+                      <v-btn
+                        @click.prevent="showCurrentMessage(index, message.userMessage)"
+                        color="success"
+                        dark
+                        icon
+                      >
+                        <v-icon>mdi-pencil</v-icon>
+                        تعديل
+                      </v-btn>
+                    </v-list-item-icon>
+                  </v-list-item>
+
+                  <v-divider></v-divider>
+
+                  <v-list-item dense>
+                    <v-list-item-icon>
+                      <v-btn
+                        @click.prevent="deleteUserMessage(index, message.userMessage)"
+                        color="red"
+                        dark
+                        icon
+                      >
+                        <v-icon>mdi-delete</v-icon>
+                        حذف
+                      </v-btn>
+                    </v-list-item-icon>
+                  </v-list-item>
+                </v-list>
+              </v-menu>
+
             </v-col>
           </v-row>
         </div>
         <!-- end chat -->
 
-        <!-- str form -->
+        <!-- str edit message dialog -->
+        <v-dialog
+          v-model="editDialog"
+          width="500"
+        >
+          <v-card class="py-8">
+            <v-card-text>
+              <v-form>
+                <v-text-field
+                  label="اكتب رسالتك هنا..."
+                  v-model="editMessage"
+                ></v-text-field>
+
+                <v-btn
+                  @click="editUserMessage(oldIndex, oldMessage)"
+                  :disabled="!editMessage"
+                >تعديل</v-btn>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+        <!-- end edit message dialog -->
+
+        <!-- str new message form -->
         <v-form class="pa-4">
           <v-text-field
             label="اكتب رسالتك هنا..."
@@ -75,7 +145,7 @@
             :disabled="!typeMessage"
           >إرسال</v-btn>
         </v-form>
-        <!-- end form -->
+        <!-- end new message form -->
 
       </v-card>
     </v-container>
@@ -84,12 +154,15 @@
 </template>
 
 <script>
-
 export default {
   middleware: "auth",
 
   data: () => ({
     typeMessage: '',
+    editMessage: '',
+    oldMessage: '',
+    oldIndex: '',
+    editDialog: false,
     chat: { 
       messages: []
     }
@@ -98,20 +171,70 @@ export default {
   methods: {
     sendMessage() {
       // console.log(this.typeMessage)
+      this.addNewMessage(this.user, this.typeMessage)
 
       this.$axios.post('/sendMessage', {
           message: this.typeMessage
         })
           .then((res) => {
             // console.log(res)
-            
-            this.addNewMessage(this.user, this.typeMessage)
 
             this.typeMessage = ''
           })
           .catch((err) => {
             console.log(err)
           })
+    },
+
+    setOldMessageIndex(i, m) {
+      this.oldIndex = i
+      this.oldMessage = m
+    },
+    
+    showCurrentMessage(i, m) {
+      this.editMessage = m
+      this.editDialog = true
+      this.setOldMessageIndex(i, m)
+    },
+
+    editUserMessage(i, m) {
+      // console.log('edit', i, m)
+      this.editDialog = false
+
+      if(this.editMessage === m) {
+        console.log('no change')
+        return true
+      }
+
+      this.$axios.post('/editMessage/'+this.user.id, {
+        oldMessage: this.oldMessage,
+        newMessage: this.editMessage
+      })
+        .then(res => {
+          // console.log(res)
+
+          this.chat.messages[i].userMessage = this.editMessage
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+
+    deleteUserMessage(i, m) {
+      // console.log('delete', i, m)
+      this.editDialog = false
+
+      this.$axios.post('/deleteMessage/'+this.user.id, {
+        message: m
+      })
+        .then(res => {
+          // console.log(res)
+
+          this.chat.messages.splice(i, 1)
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
 
     getMessages() {
@@ -164,7 +287,7 @@ export default {
       }
 
       this.chat.messages.push(newUserMessage)
-    },
+    }
   },
 
   mounted() {
@@ -187,7 +310,7 @@ export default {
     //     .whisper('typing', {
     //       name: this.typeMessage
     //     })
-    // },
-  },
+    // }
+  }
 }
 </script>
