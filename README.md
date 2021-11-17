@@ -1,7 +1,10 @@
-# planets
-
+# Planets
+    Planets is a SPA where users take there planets and chat together
+## Features
+    - user can register, login or logout
+    - user can update his profile
+    - user can chat with others
 ## Build Setup
-
 ```bash
 # install dependencies
 $ npm install
@@ -16,5 +19,3 @@ $ npm run start
 # generate static project
 $ npm run generate
 ```
-
-For detailed explanation on how things work, check out [Nuxt.js docs](https://nuxtjs.org).
