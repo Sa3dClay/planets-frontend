@@ -4,6 +4,8 @@
     - user can register, login or logout
     - user can update his profile
     - user can chat with others
+    - user can update or delete his messages
+
 ## Build Setup
 ```bash
 # install dependencies
