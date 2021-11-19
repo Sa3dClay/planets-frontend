@@ -123,7 +123,7 @@
                 ></v-text-field>
 
                 <v-btn
-                  @click="editUserMessage(oldIndex, oldMessage)"
+                  @click.prevent="editUserMessage(oldIndex, oldMessage)"
                   :disabled="!editMessage"
                 >تعديل</v-btn>
               </v-form>
@@ -172,14 +172,14 @@ export default {
     sendMessage() {
       // console.log(this.typeMessage)
       this.addNewMessage(this.user, this.typeMessage)
+      let newMessage = this.typeMessage
+      this.typeMessage = ''
 
       this.$axios.post('/sendMessage', {
-          message: this.typeMessage
+          message: newMessage
         })
           .then((res) => {
             // console.log(res)
-
-            this.typeMessage = ''
           })
           .catch((err) => {
             console.log(err)
@@ -293,8 +293,12 @@ export default {
   mounted() {
     this.getMessages()
 
-    this.$echo.channel(`chat`)
-      .on(`chat-event`, (e) => {
+    this.$echo.options.auth.headers.Authorization = this.$auth.strategy.token.get()
+
+    this.$echo.channel('chat')
+      .on('chat-event', (e) => {
+        // console.log(e)
+
         if(e.user.id !== this.user.id) {
           this.addNewMessage(e.user, e.message)
         }
@@ -306,7 +310,7 @@ export default {
 
   watch: {
     // typeMessage() {
-    //   this.$echo.private(`chat`)
+    //   this.$echo.private('chat')
     //     .whisper('typing', {
     //       name: this.typeMessage
     //     })

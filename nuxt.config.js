@@ -11,7 +11,7 @@ export default {
     meta: [
       { charset: 'utf-8' },
       { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'description', name: 'description', content: '' }
+      { hid: 'description', name: 'description', content: 'planets' }
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }
@@ -45,11 +45,14 @@ export default {
     '@nuxtjs/vuetify'
   ],
 
+  // echo configuration
   echo: {
     broadcaster: 'pusher',
     key: 'bf1c49047275628bd29d',
     cluster: 'eu',
-    forceTLS: true,
+    forceTLS: false,
+    // encrypted: true,
+    // authEndpoint: "http://127.0.0.1:8000/broadcasting/auth",
     plugins: ['~/plugins/echo.js']
   },
 
@@ -63,10 +66,6 @@ export default {
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    // for deployment
-    // baseURL: "https://planets-server.herokuapp.com/api",
-
-    // for development
     baseURL: process.env.baseURL || "http://localhost:8000/api"
   },
 

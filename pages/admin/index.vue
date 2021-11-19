@@ -47,7 +47,7 @@ export default {
     async getUsers() {
       let res = await this.$axios.$get("/users")
       this.users = res.users
-      console.log(res.users)
+      // console.log(res.users)
     },
   },
 }
