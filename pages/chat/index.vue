@@ -293,11 +293,20 @@ export default {
   mounted() {
     this.getMessages()
 
+    // this.$echo.private(`chat`)
+    //   .listen('chat-event', (e) => {
+    //     console.log(e)
+
+    //     if(e.user.id !== this.user.id) {
+    //       this.addNewMessage(e.user, e.message)
+    //     }
+    //   })
+
     this.$echo.options.auth.headers.Authorization = this.$auth.strategy.token.get()
 
     this.$echo.channel('chat')
       .on('chat-event', (e) => {
-        // console.log(e)
+        console.log(e)
 
         if(e.user.id !== this.user.id) {
           this.addNewMessage(e.user, e.message)

@@ -45,16 +45,26 @@ export default {
     '@nuxtjs/vuetify'
   ],
 
-  // echo configuration
+  // echo pusher configuration
   echo: {
     broadcaster: 'pusher',
     key: 'bf1c49047275628bd29d',
     cluster: 'eu',
     forceTLS: false,
-    // encrypted: true,
-    // authEndpoint: "http://127.0.0.1:8000/broadcasting/auth",
     plugins: ['~/plugins/echo.js']
   },
+
+  // echo ably configuration
+  // echo: {
+  //   broadcaster: 'pusher',
+  //   key: 'FwqzIw.pZxDYg:CDBZJRVQZE2RB2dPczj_jA6DBpsR9Uu2CKlAUrx2XZQ',
+  //   wsHost: 'realtime-pusher.ably.io',
+  //   wsPort: 443,
+  //   disableStats: true,
+  //   encrypted: true,
+  //   authEndpoint: 'http://localhost:8000/broadcasting/auth',
+  //   plugins: ['~/plugins/echo.js']
+  // },
 
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
