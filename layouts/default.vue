@@ -3,8 +3,6 @@
     <v-navigation-drawer
       v-if="authenticated"
       v-model="drawer"
-      temporary
-      absolute
       right
       app
     >
