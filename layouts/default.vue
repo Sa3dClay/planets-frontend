@@ -67,12 +67,12 @@ export default {
       { title: 'الصفحة الشخصية', icon: 'mdi-account', route: '/profile' },
       { title: 'تحدث مع الأصدقاء', icon: 'mdi-message-outline', route: '/chat' }
     ]
-  }),  
+  }),
   methods: {
-    logout() {
+    logout () {
       try {
         this.$auth.logout()
-      } catch(e) {
+      } catch (e) {
         console.log(e)
       }
     }

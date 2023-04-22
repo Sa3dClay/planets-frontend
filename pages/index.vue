@@ -33,19 +33,19 @@
 </template>
 
 <script>
-import Login from "~/components/auth/login.vue";
-import Register from "~/components/auth/register.vue";
+import Login from '~/components/auth/login.vue'
+import Register from '~/components/auth/register.vue'
 
 export default {
-  data() {
+  data () {
     return {
       loginDialog: false,
-      registerDialog: false,
+      registerDialog: false
     }
   },
   components: {
     Login,
-    Register,
-  },
-};
+    Register
+  }
+}
 </script>

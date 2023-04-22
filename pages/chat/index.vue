@@ -5,7 +5,6 @@
     <!-- str caht -->
     <v-container>
       <v-card class="mx-auto" max-width="500" elevation="4">
-
         <!-- str toolbar -->
         <v-toolbar color="deep-purple accent-4" dark>
           <v-app-bar-nav-icon></v-app-bar-nav-icon>
@@ -48,25 +47,27 @@
                 <p
                   v-if="message.userId !== user.id"
                   class="py-0 px-4 ma-0 text-center"
-                >{{ message.userName }}</p>  
+                >
+                  {{ message.userName }}
+                </p>
               </v-responsive>
             </v-col>
 
             <v-col cols="9" class="pa-1 ma-0">
               <p
                 class="py-1 px-4 ma-0 textMessage d-inline-block"
-                :class="message.userId == user.id ? 'float-right selfMessage' : 'float-left otherMessage'"
-              >{{ message.userMessage }}</p>
+                :class="
+                  message.userId == user.id
+                    ? 'float-right selfMessage'
+                    : 'float-left otherMessage'
+                "
+              >
+                {{ message.userMessage }}
+              </p>
 
               <v-menu v-if="message.userId == user.id">
                 <template v-slot:activator="{ on, attrs }">
-                  <v-btn
-                    v-on="on"
-                    v-bind="attrs"
-                    color="primary"
-                    dark
-                    icon
-                  >
+                  <v-btn v-on="on" v-bind="attrs" color="primary" dark icon>
                     <v-icon>mdi-dots-horizontal</v-icon>
                   </v-btn>
                 </template>
@@ -75,7 +76,9 @@
                   <v-list-item dense>
                     <v-list-item-icon>
                       <v-btn
-                        @click.prevent="showCurrentMessage(index, message.userMessage)"
+                        @click.prevent="
+                          showCurrentMessage(index, message.userMessage)
+                        "
                         color="success"
                         dark
                         icon
@@ -91,7 +94,9 @@
                   <v-list-item dense>
                     <v-list-item-icon>
                       <v-btn
-                        @click.prevent="deleteUserMessage(index, message.userMessage)"
+                        @click.prevent="
+                          deleteUserMessage(index, message.userMessage)
+                        "
                         color="red"
                         dark
                         icon
@@ -103,17 +108,13 @@
                   </v-list-item>
                 </v-list>
               </v-menu>
-
             </v-col>
           </v-row>
         </div>
         <!-- end chat -->
 
         <!-- str edit message dialog -->
-        <v-dialog
-          v-model="editDialog"
-          width="500"
-        >
+        <v-dialog v-model="editDialog" width="500">
           <v-card class="py-8">
             <v-card-text>
               <v-form>
@@ -125,7 +126,8 @@
                 <v-btn
                   @click.prevent="editUserMessage(oldIndex, oldMessage)"
                   :disabled="!editMessage"
-                >تعديل</v-btn>
+                  >تعديل</v-btn
+                >
               </v-form>
             </v-card-text>
           </v-card>
@@ -143,10 +145,10 @@
             type="submit"
             @click.prevent="sendMessage"
             :disabled="!typeMessage"
-          >إرسال</v-btn>
+            >إرسال</v-btn
+          >
         </v-form>
         <!-- end new message form -->
-
       </v-card>
     </v-container>
     <!-- end chat -->
@@ -155,7 +157,7 @@
 
 <script>
 export default {
-  middleware: "auth",
+  middleware: 'auth',
 
   data: () => ({
     typeMessage: '',
@@ -163,123 +165,127 @@ export default {
     oldMessage: '',
     oldIndex: '',
     editDialog: false,
-    chat: { 
+    chat: {
       messages: []
     }
   }),
 
   methods: {
-    sendMessage() {
+    sendMessage () {
       // console.log(this.typeMessage)
       this.addNewMessage(this.user, this.typeMessage)
-      let newMessage = this.typeMessage
+      const newMessage = this.typeMessage
       this.typeMessage = ''
 
-      this.$axios.post('/sendMessage', {
+      this.$axios
+        .post('/sendMessage', {
           message: newMessage
         })
-          .then((res) => {
-            // console.log(res)
-          })
-          .catch((err) => {
-            console.log(err)
-          })
+        .then((res) => {
+          // console.log(res)
+        })
+        .catch((err) => {
+          console.log(err)
+        })
     },
 
-    setOldMessageIndex(i, m) {
+    setOldMessageIndex (i, m) {
       this.oldIndex = i
       this.oldMessage = m
     },
-    
-    showCurrentMessage(i, m) {
+
+    showCurrentMessage (i, m) {
       this.editMessage = m
       this.editDialog = true
       this.setOldMessageIndex(i, m)
     },
 
-    editUserMessage(i, m) {
+    editUserMessage (i, m) {
       // console.log('edit', i, m)
       this.editDialog = false
 
-      if(this.editMessage === m) {
+      if (this.editMessage === m) {
         console.log('no change')
         return true
       }
 
-      this.$axios.post('/editMessage/'+this.user.id, {
-        oldMessage: this.oldMessage,
-        newMessage: this.editMessage
-      })
-        .then(res => {
+      this.$axios
+        .post('/editMessage/' + this.user.id, {
+          oldMessage: this.oldMessage,
+          newMessage: this.editMessage
+        })
+        .then((res) => {
           // console.log(res)
 
           this.chat.messages[i].userMessage = this.editMessage
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
     },
 
-    deleteUserMessage(i, m) {
+    deleteUserMessage (i, m) {
       // console.log('delete', i, m)
       this.editDialog = false
 
-      this.$axios.post('/deleteMessage/'+this.user.id, {
-        message: m
-      })
-        .then(res => {
+      this.$axios
+        .post('/deleteMessage/' + this.user.id, {
+          message: m
+        })
+        .then((res) => {
           // console.log(res)
 
           this.chat.messages.splice(i, 1)
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
     },
 
-    getMessages() {
-      this.$axios.get('/getMessages')
-        .then(res => {
+    getMessages () {
+      this.$axios
+        .get('/getMessages')
+        .then((res) => {
           // console.log(res.data.messages)
 
-          let messages = res.data.messages
+          const messages = res.data.messages
 
-          if(messages.length > 0) {
+          if (messages.length > 0) {
             this.showMessages(messages)
           }
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err)
         })
     },
 
-    isDiffUser(index) {
-      if(index == 0) {
+    isDiffUser (index) {
+      if (index === 0) {
         return true
       }
 
-      let prevUser = this.chat.messages[index--].userName
-      let currUser = this.chat.messages[index].userName
-      
-      if(prevUser == currUser) {
+      const prevUser = this.chat.messages[index--].userName
+      const currUser = this.chat.messages[index].userName
+
+      if (prevUser === currUser) {
         return false
       } else {
         return true
       }
     },
 
-    showMessages(messages) {
+    showMessages (messages) {
       // console.log(messages)
 
-      messages.forEach(oldMessage => {
+      messages.forEach((oldMessage) => {
         // console.log(oldMessage.user, oldMessage.message)
 
         this.addNewMessage(oldMessage.user, oldMessage.message)
       })
     },
 
-    addNewMessage(user, message) {
-      let newUserMessage = {
+    addNewMessage (user, message) {
+      const newUserMessage = {
         userId: user.id,
         avatar: user.planet,
         userName: user.name,
@@ -290,7 +296,7 @@ export default {
     }
   },
 
-  mounted() {
+  mounted () {
     this.getMessages()
 
     // this.$echo.private(`chat`)
@@ -302,19 +308,19 @@ export default {
     //     }
     //   })
 
-    this.$echo.options.auth.headers.Authorization = this.$auth.strategy.token.get()
+    this.$echo.options.auth.headers.Authorization =
+      this.$auth.strategy.token.get()
 
-    this.$echo.channel('chat')
-      .on('chat-event', (e) => {
-        console.log(e)
+    this.$echo.channel('chat').on('chat-event', (e) => {
+      console.log(e)
 
-        if(e.user.id !== this.user.id) {
-          this.addNewMessage(e.user, e.message)
-        }
-      })
-      // .listenForWhisper('typing', (e) => {
-      //   console.log(e.name);
-      // })
+      if (e.user.id !== this.user.id) {
+        this.addNewMessage(e.user, e.message)
+      }
+    })
+    // .listenForWhisper('typing', (e) => {
+    //   console.log(e.name)
+    // })
   },
 
   watch: {
