@@ -1,28 +1,29 @@
 <template>
   <v-app>
     <v-navigation-drawer
-      app
-      expand-on-hover
-      permanent
-      right
       v-if="authenticated"
+      v-model="drawer"
+      temporary
+      absolute
+      right
+      app
     >
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img :src="require('~/assets/img/'+user.planet+'.png')"></v-img>
+          <v-img :src="require('~/assets/img/'+user.planet+'.png')" />
         </v-list-item-avatar>
 
         <v-list-item-title>{{ user.name }}</v-list-item-title>
       </v-list-item>
 
-      <v-divider></v-divider>
+      <v-divider />
 
       <v-list dense>
         <v-list-item
           v-for="(link, index) in links"
-          link
           :key="index"
           :to="link.route"
+          link
         >
           <v-list-item-icon>
             <v-icon>{{ link.icon }}</v-icon>
@@ -35,12 +36,12 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar app v-if="authenticated">
-      <v-app-bar-nav-icon></v-app-bar-nav-icon>
+    <v-app-bar v-if="authenticated" app>
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
 
       <v-app-bar-title>الكواكب</v-app-bar-title>
 
-      <v-spacer></v-spacer>
+      <v-spacer />
 
       <div>
         <v-btn color="red darken-2" dark @click.prevent="logout()">تسجيل الخروج</v-btn>
@@ -49,7 +50,7 @@
 
     <v-main>
       <div class="pg">
-        <div class="overlay"></div>
+        <div class="overlay" />
 
         <div class="pg-content">
           <nuxt />
@@ -62,6 +63,7 @@
 <script>
 export default {
   data: () => ({
+    drawer: false,
     links: [
       { title: 'الرئيسية', icon: 'mdi-home', route: '/' },
       { title: 'الصفحة الشخصية', icon: 'mdi-account', route: '/profile' },
