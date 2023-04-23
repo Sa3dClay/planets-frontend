@@ -36,9 +36,7 @@
 
     <v-app-bar v-if="authenticated" app>
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-
       <v-app-bar-title>الكواكب</v-app-bar-title>
-
       <v-spacer />
 
       <div>
@@ -49,7 +47,6 @@
     <v-main>
       <div class="pg">
         <div class="overlay" />
-
         <div class="pg-content">
           <nuxt />
         </div>
@@ -65,6 +62,7 @@ export default {
     links: [
       { title: 'الرئيسية', icon: 'mdi-home', route: '/' },
       { title: 'الصفحة الشخصية', icon: 'mdi-account', route: '/profile' },
+      { title: 'إضافة أصدقاء', icon: 'mdi-account-multiple-plus', route: '/friends' },
       { title: 'تحدث مع الأصدقاء', icon: 'mdi-message-outline', route: '/chat' }
     ]
   }),

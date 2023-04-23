@@ -20,7 +20,7 @@ export default {
 
   // Global CSS
   css: [
-    "~layouts/style.css"
+    '~layouts/style.css'
   ],
 
   // Global JS
@@ -31,8 +31,8 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-    "~plugins/mixins/user.js",
-    "~plugins/vue-chat-scroll"
+    '~plugins/mixins/user.js',
+    '~plugins/vue-chat-scroll'
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -76,7 +76,7 @@ export default {
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    baseURL: process.env.baseURL || "http://localhost:8000/api"
+    baseURL: process.env.baseURL || 'http://localhost:8000/api'
   },
 
   // Auth module configuration (https://auth.nuxtjs.org/guide/setup)
