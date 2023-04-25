@@ -7,7 +7,7 @@
             <v-toolbar dark color="primary">
               <v-toolbar-title>تسجيل الدخول</v-toolbar-title>
 
-              <v-spacer></v-spacer>
+              <v-spacer />
 
               <v-btn icon @click="toggle()">
                 <v-icon>mdi-close</v-icon>
@@ -22,22 +22,24 @@
                 type="email"
                 dir="ltr"
                 required
-              ></v-text-field>
+              />
 
               <v-text-field
-                v-model.trim="loginForm.password"
                 id="password"
+                v-model.trim="loginForm.password"
                 prepend-icon="mdi-lock"
                 label="الرقم السري"
                 type="password"
                 required
-              ></v-text-field>
+              />
             </v-card-text>
 
             <v-card-actions>
-              <v-spacer></v-spacer>
+              <v-spacer />
 
-              <v-btn color="primary" type="submit">تسجيل</v-btn>
+              <v-btn :disabled="isLoading" color="primary" type="submit">
+                تسجيل
+              </v-btn>
             </v-card-actions>
           </v-card>
         </v-form>
@@ -51,19 +53,21 @@ export default {
   data: () => ({
     drawer: null,
     loginForm: {
-      email: "",
-      password: "",
+      email: '',
+      password: ''
     },
+    isLoading: false
   }),
-
   methods: {
-    toggle() {
-      this.$emit("toggleLogin", false)
+    toggle () {
+      this.$emit('toggleLogin', false)
     },
-    async submitLogin() {
+    async submitLogin () {
+      this.isLoading = true
+
       try {
-        await this.$auth.loginWith("local", {
-          data: this.loginForm,
+        await this.$auth.loginWith('local', {
+          data: this.loginForm
         })
 
         this.$swal({
@@ -75,13 +79,15 @@ export default {
 
         this.toggle()
 
-        if(this.user.role == 0) {
+        if (this.user.role === 0) {
           this.$router.push('/admin')
         } else {
           this.$router.push('/profile')
         }
       } catch (e) {
         console.log(e)
+
+        this.isLoading = false
 
         this.$swal({
           icon: 'error',
@@ -92,7 +98,7 @@ export default {
           confirmButtonColor: '#3498db'
         })
       }
-    },
-  },
+    }
+  }
 }
 </script>
