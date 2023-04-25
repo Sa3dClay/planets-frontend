@@ -13,7 +13,6 @@
               <th class="text-center">الوظيفة</th>
             </tr>
           </thead>
-
           <tbody>
             <tr v-for="user in users" :key="user.id">
               <td>{{ user.id }}</td>
@@ -31,24 +30,20 @@
 
 <script>
 export default {
-  middleware: ["auth", "isAdmin"],
-
-  data() {
+  middleware: ['auth', 'isAdmin'],
+  data () {
     return {
-      users: null,
+      users: null
     }
   },
-
-  mounted() {
+  mounted () {
     this.getUsers()
   },
-
   methods: {
-    async getUsers() {
-      let res = await this.$axios.$get("/users")
+    async getUsers () {
+      const res = await this.$axios.$get('/users')
       this.users = res.users
-      // console.log(res.users)
-    },
-  },
+    }
+  }
 }
 </script>
