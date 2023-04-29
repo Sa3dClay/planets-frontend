@@ -70,6 +70,11 @@ export default {
           data: this.loginForm
         })
 
+        const deviceToken = await this.$fire.messaging.getToken()
+        await this.$axios.post('/users/set-fcm-token', {
+          token: deviceToken
+        })
+
         this.$swal({
           icon: 'success',
           title: 'أهلاً بك من جديد',
@@ -79,11 +84,9 @@ export default {
 
         this.toggle()
 
-        if (this.user.role === 0) {
-          this.$router.push('/admin')
-        } else {
-          this.$router.push('/profile')
-        }
+        this.user.role === 0
+          ? this.$router.push('/admin')
+          : this.$router.push('/profile')
       } catch (e) {
         console.log(e)
 

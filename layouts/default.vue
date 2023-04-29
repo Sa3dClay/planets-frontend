@@ -31,6 +31,18 @@
             <v-list-item-title>{{ link.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <hr />
+
+        <v-list-item link @click.prevent="logout">
+          <v-list-item-icon>
+            <v-icon>mdi-logout</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>تسجيل الخروج</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -40,7 +52,9 @@
       <v-spacer />
 
       <div>
-        <v-btn color="red darken-2" dark @click.prevent="logout()">تسجيل الخروج</v-btn>
+        <v-btn icon to="/chat">
+          <v-icon>mdi-message-outline</v-icon>
+        </v-btn>
       </div>
     </v-app-bar>
 

@@ -77,7 +77,7 @@
               <v-btn
                 type="submit"
                 color="primary"
-                :disabled="!valid"
+                :disabled="!valid || isLoading"
               >تسجيل</v-btn>
             </v-card-actions>
           </v-form>
@@ -92,6 +92,7 @@ export default {
   data: () => ({
     drawer: null,
     valid: false,
+    isLoading: false,
     showPassword: false,
     registerForm: {
       name: '',
@@ -122,6 +123,7 @@ export default {
       this.$emit('toggleRegister', false)
     },
     async submitRegister() {
+      this.isLoading = true
       console.log('you hit register', this.registerForm.planet)
 
       try {
@@ -132,6 +134,11 @@ export default {
             email: this.registerForm.email,
             password: this.registerForm.password,
           }
+        })
+
+        const deviceToken = await this.$fire.messaging.getToken()
+        await this.$axios.post('/users/set-fcm-token', {
+          token: deviceToken
         })
 
         this.$swal({
@@ -145,6 +152,7 @@ export default {
         this.$router.push('/profile')
       } catch (e) {
         console.log(e)
+        this.isLoading = false
 
         this.$swal({
           icon: 'error',
