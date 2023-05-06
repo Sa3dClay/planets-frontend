@@ -53,55 +53,62 @@ export default {
   data: () => ({
     drawer: null,
     loginForm: {
-      email: '',
-      password: ''
+      email: "",
+      password: "",
     },
-    isLoading: false
+    isLoading: false,
   }),
   methods: {
-    toggle () {
-      this.$emit('toggleLogin', false)
+    toggle() {
+      this.$emit("toggleLogin", false);
     },
-    async submitLogin () {
-      this.isLoading = true
+    async setFcmToken() {
+      try {
+        const deviceToken = await this.$fire.messaging.getToken();
+
+        await this.$axios.post("/users/set-fcm-token", {
+          token: deviceToken,
+        });
+      } catch (e) {
+        console.log(e);
+      }
+    },
+    async submitLogin() {
+      this.isLoading = true;
 
       try {
-        await this.$auth.loginWith('local', {
-          data: this.loginForm
-        })
+        await this.$auth.loginWith("local", {
+          data: this.loginForm,
+        });
 
-        const deviceToken = await this.$fire.messaging.getToken()
-        await this.$axios.post('/users/set-fcm-token', {
-          token: deviceToken
-        })
+        this.setFcmToken();
 
         this.$swal({
-          icon: 'success',
-          title: 'أهلاً بك من جديد',
+          icon: "success",
+          title: "أهلاً بك من جديد",
           showConfirmButton: false,
-          timer: 1500
-        })
+          timer: 1500,
+        });
 
-        this.toggle()
+        this.toggle();
 
         this.user.role === 0
-          ? this.$router.push('/admin')
-          : this.$router.push('/profile')
+          ? this.$router.push("/admin")
+          : this.$router.push("/profile");
       } catch (e) {
-        console.log(e)
+        console.log(e);
 
-        this.isLoading = false
+        this.isLoading = false;
 
         this.$swal({
-          icon: 'error',
-          title: 'عذراً، تأكد من صحة بياناتك',
-          text: e,
+          icon: "error",
+          title: "عذراً، تأكد من صحة بياناتك",
           showConfirmButton: true,
-          confirmButtonText: 'حسناً',
-          confirmButtonColor: '#3498db'
-        })
+          confirmButtonText: "حسناً",
+          confirmButtonColor: "#3498db",
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
