@@ -1,14 +1,9 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-if="authenticated"
-      v-model="drawer"
-      right
-      app
-    >
+    <v-navigation-drawer v-if="authenticated" v-model="drawer" right app>
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img :src="require('~/assets/img/'+user.planet+'.png')" />
+          <v-img :src="require('~/assets/img/' + user.planet + '.png')" />
         </v-list-item-avatar>
 
         <v-list-item-title>{{ user.name }}</v-list-item-title>
@@ -74,20 +69,33 @@ export default {
   data: () => ({
     drawer: false,
     links: [
-      { title: 'الرئيسية', icon: 'mdi-home', route: '/' },
-      { title: 'الصفحة الشخصية', icon: 'mdi-account', route: '/profile' },
-      { title: 'إضافة أصدقاء', icon: 'mdi-account-multiple-plus', route: '/friends' },
-      { title: 'تحدث مع الأصدقاء', icon: 'mdi-message-outline', route: '/chat' }
-    ]
+      { title: "الرئيسية", icon: "mdi-home", route: "/" },
+      { title: "الصفحة الشخصية", icon: "mdi-account", route: "/profile" },
+      {
+        title: "إضافة أصدقاء",
+        icon: "mdi-account-multiple-plus",
+        route: "/friends",
+      },
+      {
+        title: "تحدث مع الأصدقاء",
+        icon: "mdi-message-outline",
+        route: "/chat",
+      },
+    ],
   }),
   methods: {
-    logout () {
+    async deleteFcmToken() {
+      await this.$axios.post("/users/delete-fcm-token");
+    },
+    logout() {
       try {
-        this.$auth.logout()
+        this.deleteFcmToken();
+
+        this.$auth.logout();
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
