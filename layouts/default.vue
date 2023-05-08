@@ -60,11 +60,23 @@
           <nuxt />
         </div>
       </div>
+
+      <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">
+        {{ snackbarText }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { eventBus } from "@/plugins/event-bus.js";
+
 export default {
   data: () => ({
     drawer: false,
@@ -82,6 +94,10 @@ export default {
         route: "/chat",
       },
     ],
+    snackbarText: "",
+    snackbar: false,
+    timeout: 6000,
+    color: "",
   }),
   methods: {
     async deleteFcmToken() {
@@ -96,6 +112,17 @@ export default {
         console.log(e);
       }
     },
+    handleShowSnackbar({ message, type }) {
+      console.log("handle show snackbar");
+      this.snackbarText = message;
+      this.snackbar = true;
+      this.color = type;
+    },
+  },
+  created() {
+    eventBus.$on("show-snackbar", (data) => {
+      this.handleShowSnackbar(data);
+    });
   },
 };
 </script>
