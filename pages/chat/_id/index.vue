@@ -40,6 +40,7 @@
         <v-text-field
           v-model="newMessage"
           label="اكتب رسالتك هنا..."
+          @focus="handleInputMessageFocus"
         />
         <v-btn
           type="submit"
@@ -69,6 +70,7 @@ export default {
   mounted () {
     this.getFriendData()
     this.getMessages()
+    this.markPrevMessagesAsRead();
   },
   methods: {
     async getFriendData () {
@@ -105,7 +107,20 @@ export default {
           console.log(err)
           this.isLoading = false
         })
-    }
+    },
+    markPrevMessagesAsRead() {
+      this.$axios
+        .patch('/chat/messages/' + this.$route.params.id + '/read-prev-messages')
+        .then((res) => {
+          // TODO: change read marks in chat
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    handleInputMessageFocus() {
+      this.markPrevMessagesAsRead();
+    },
   }
 }
 </script>

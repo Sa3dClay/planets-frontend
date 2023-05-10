@@ -49,6 +49,8 @@
 </template>
 
 <script>
+import { eventBus } from "@/plugins/event-bus.js";
+
 export default {
   data: () => ({
     drawer: null,
@@ -70,7 +72,12 @@ export default {
           token: deviceToken,
         });
       } catch (e) {
-        console.log(e);
+        console.log("push notification permission", e);
+
+        eventBus.$emit("show-snackbar", {
+          message: "لقد تم حظر الإشعارات، يجب عليك السماح بها حتى تستمع بهذه الميزة",
+          type: "error",
+        });
       }
     },
     async submitLogin() {
