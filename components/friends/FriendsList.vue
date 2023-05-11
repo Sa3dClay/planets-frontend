@@ -10,7 +10,16 @@
           </v-list-item-content>
 
           <v-list-item-action>
-            <v-btn color="blue darken-1 white--text" :to="'/chat/' + user.id">محادثة</v-btn>
+            <v-badge
+              :content="user.unread_counter"
+              :value="user.unread_counter"
+              color="error"
+              overlap
+            >
+              <v-btn color="blue darken-1 white--text" :to="'/chat/' + user.id">
+                محادثة
+              </v-btn>
+            </v-badge>
           </v-list-item-action>
         </v-list-item>
       </v-list>
@@ -20,20 +29,23 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      friends: []
-    }
+      friends: [],
+    };
   },
-  mounted () {
-    this.getFriends()
+  mounted() {
+    this.getFriends();
   },
   methods: {
-    async getFriends () {
-      const res = await this.$axios.$get('/users/friends')
-
-      this.friends = res.data
-    }
-  }
-}
+    async getFriends() {
+      try {
+        const res = await this.$axios.$get("/users/friends");
+        this.friends = res.data;
+      } catch (e) {
+        console.log(e);
+      }
+    },
+  },
+};
 </script>
