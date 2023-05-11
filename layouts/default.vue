@@ -113,7 +113,6 @@ export default {
       }
     },
     handleShowSnackbar({ message, type }) {
-      console.log("handle show snackbar");
       this.snackbarText = message;
       this.snackbar = true;
       this.color = type;

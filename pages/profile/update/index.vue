@@ -119,8 +119,6 @@ export default {
       try {
         await this.$axios.post('/users/'+id, this.form)
           .then((res) => {
-            // console.log(res.data)
-
             try {
               // method 1 nuxt auth
               this.$auth.setUser(res.data.data)

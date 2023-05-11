@@ -10,7 +10,7 @@ const fcmMixin = {
           token: deviceToken,
         });
       } catch (e) {
-        console.log("push notification permission", e);
+        console.log(e);
 
         eventBus.$emit("show-snackbar", {
           message:

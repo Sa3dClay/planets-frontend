@@ -29,7 +29,6 @@ export default {
 
         this.friend = res.user;
       } catch (e) {
-        console.log("catch error and emit show snackbar");
         eventBus.$emit("show-snackbar", {
           message: "عذراً ليس لديك اذن بعرض هذا الزائر",
           type: "error",
