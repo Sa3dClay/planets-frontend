@@ -49,9 +49,10 @@
 </template>
 
 <script>
-import { eventBus } from "@/plugins/event-bus.js";
+import fcmMixin from "~/plugins/mixins/fcm";
 
 export default {
+  mixins: [fcmMixin],
   data: () => ({
     drawer: null,
     loginForm: {
@@ -63,22 +64,6 @@ export default {
   methods: {
     toggle() {
       this.$emit("toggleLogin", false);
-    },
-    async setFcmToken() {
-      try {
-        const deviceToken = await this.$fire.messaging.getToken();
-
-        await this.$axios.post("/users/set-fcm-token", {
-          token: deviceToken,
-        });
-      } catch (e) {
-        console.log("push notification permission", e);
-
-        eventBus.$emit("show-snackbar", {
-          message: "لقد تم حظر الإشعارات، يجب عليك السماح بها حتى تستمع بهذه الميزة",
-          type: "error",
-        });
-      }
     },
     async submitLogin() {
       this.isLoading = true;
@@ -104,7 +89,6 @@ export default {
           : this.$router.push("/profile");
       } catch (e) {
         console.log(e);
-
         this.isLoading = false;
 
         this.$swal({

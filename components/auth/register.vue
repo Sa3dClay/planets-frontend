@@ -35,8 +35,8 @@
               <v-text-field
                 prepend-icon="mdi-lock"
                 label="الرقم السري"
-                :type="showPassword? 'text' : 'password'"
-                :append-icon="showPassword? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="showPassword = !showPassword"
                 v-model="registerForm.password"
                 :rules="passwordRules"
@@ -45,11 +45,14 @@
               <v-text-field
                 prepend-icon="mdi-check"
                 label="تأكيد الرقم السري"
-                :type="showPassword? 'text' : 'password'"
-                :append-icon="showPassword? 'mdi-eye' : 'mdi-eye-off'"
+                :type="showPassword ? 'text' : 'password'"
+                :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                 @click:append="showPassword = !showPassword"
                 v-model="registerForm.confirmPassword"
-                :rules="[registerForm.confirmPassword === registerForm.password || 'الرقم السري غير متطابق']"
+                :rules="[
+                  registerForm.confirmPassword === registerForm.password ||
+                    'الرقم السري غير متطابق',
+                ]"
               ></v-text-field>
 
               <v-radio-group
@@ -57,17 +60,21 @@
                 :rules="planetRules"
                 row
               >
-                <v-radio
-                  label="زحل"
-                  value="saturn"
-                ></v-radio>
-                <img src="~/assets/img/saturn.png" width="auto" height="50" class="ml-2" />
+                <v-radio label="زحل" value="saturn" />
+                <img
+                  src="~/assets/img/saturn.png"
+                  width="auto"
+                  height="50"
+                  class="ml-2"
+                />
 
-                <v-radio
-                  label="المريخ"
-                  value="jupiter"
-                ></v-radio>
-                <img src="~/assets/img/jupiter.png" width="auto" height="50" class="ml-2" />
+                <v-radio label="المريخ" value="jupiter" />
+                <img
+                  src="~/assets/img/jupiter.png"
+                  width="auto"
+                  height="50"
+                  class="ml-2"
+                />
               </v-radio-group>
             </v-card-text>
 
@@ -78,7 +85,8 @@
                 type="submit"
                 color="primary"
                 :disabled="!valid || isLoading"
-              >تسجيل</v-btn>
+                >تسجيل</v-btn
+              >
             </v-card-actions>
           </v-form>
         </v-card>
@@ -88,82 +96,79 @@
 </template>
 
 <script>
+import fcmMixin from "~/plugins/mixins/fcm";
+
 export default {
+  mixins: [fcmMixin],
   data: () => ({
     drawer: null,
     valid: false,
     isLoading: false,
     showPassword: false,
     registerForm: {
-      name: '',
-      email: '',
-      planet: '',
-      password: '',
-      confirmPassword: '',
+      name: "",
+      email: "",
+      planet: "",
+      password: "",
+      confirmPassword: "",
     },
     nameRules: [
-      v => !!v || 'رجاء ادخال اسم المستخدم',
-      v => v.length <= 20 || 'يجب الا يزيد الاسم عن عشرين حرف',
+      (v) => !!v || "رجاء ادخال اسم المستخدم",
+      (v) => v.length <= 20 || "يجب الا يزيد الاسم عن عشرين حرف",
     ],
     emailRules: [
-      v => !!v || 'رجاء ادخال البريد الالكتروني',
-      v => /.+@.+/.test(v) || 'يجب أن يكون البريد الالكتروني صحيحاً',
+      (v) => !!v || "رجاء ادخال البريد الالكتروني",
+      (v) => /.+@.+/.test(v) || "يجب أن يكون البريد الالكتروني صحيحاً",
     ],
     passwordRules: [
-      v => !!v || 'رجاء ادخال الرقم السري',
-      v => v.length >= 8 || 'الرقم السري يجب ان لا يقل عن ثمانية أحرف',
+      (v) => !!v || "رجاء ادخال الرقم السري",
+      (v) => v.length >= 8 || "الرقم السري يجب ان لا يقل عن ثمانية أحرف",
     ],
-    planetRules: [
-      v => !!v || 'رجاء اختيار الكوكب',
-    ]
+    planetRules: [(v) => !!v || "رجاء اختيار الكوكب"],
   }),
-
   methods: {
     toggle() {
-      this.$emit('toggleRegister', false)
+      this.$emit("toggleRegister", false);
     },
     async submitRegister() {
-      this.isLoading = true
-      console.log('you hit register', this.registerForm.planet)
+      this.isLoading = true;
 
       try {
-        await this.$axios.post('auth/register', this.registerForm)
+        await this.$axios.post("auth/register", this.registerForm);
 
-        await this.$auth.loginWith('local', {
+        await this.$auth.loginWith("local", {
           data: {
             email: this.registerForm.email,
             password: this.registerForm.password,
-          }
-        })
+          },
+        });
 
-        const deviceToken = await this.$fire.messaging.getToken()
-        await this.$axios.post('/users/set-fcm-token', {
-          token: deviceToken
-        })
+        this.setFcmToken();
 
         this.$swal({
-          icon: 'success',
-          title: 'لقد تم تسجيلك بنجاح',
+          icon: "success",
+          title: "لقد تم تسجيلك بنجاح",
           showConfirmButton: false,
-          timer: 1500
-        })
+          timer: 1500,
+        });
 
-        this.toggle()
-        this.$router.push('/profile')
+        this.toggle();
+
+        this.$router.push("/profile");
       } catch (e) {
-        console.log(e)
-        this.isLoading = false
+        console.log(e);
+
+        this.isLoading = false;
 
         this.$swal({
-          icon: 'error',
-          title: 'عذراً، حدث خطأ أثناء التسجيل',
-          text: e,
+          icon: "error",
+          title: "عذراً، حدث خطأ أثناء التسجيل",
           showConfirmButton: true,
-          confirmButtonText: 'حسناً',
-          confirmButtonColor: '#3498db'
-        })
+          confirmButtonText: "حسناً",
+          confirmButtonColor: "#3498db",
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
