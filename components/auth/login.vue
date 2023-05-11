@@ -49,56 +49,57 @@
 </template>
 
 <script>
+import fcmMixin from "~/plugins/mixins/fcm";
+
 export default {
+  mixins: [fcmMixin],
   data: () => ({
     drawer: null,
     loginForm: {
-      email: '',
-      password: ''
+      email: "",
+      password: "",
     },
-    isLoading: false
+    isLoading: false,
   }),
   methods: {
-    toggle () {
-      this.$emit('toggleLogin', false)
+    toggle() {
+      this.$emit("toggleLogin", false);
     },
-    async submitLogin () {
-      this.isLoading = true
+    async submitLogin() {
+      this.isLoading = true;
 
       try {
-        await this.$auth.loginWith('local', {
-          data: this.loginForm
-        })
+        await this.$auth.loginWith("local", {
+          data: this.loginForm,
+        });
+
+        this.setFcmToken();
 
         this.$swal({
-          icon: 'success',
-          title: 'أهلاً بك من جديد',
+          icon: "success",
+          title: "أهلاً بك من جديد",
           showConfirmButton: false,
-          timer: 1500
-        })
+          timer: 1500,
+        });
 
-        this.toggle()
+        this.toggle();
 
-        if (this.user.role === 0) {
-          this.$router.push('/admin')
-        } else {
-          this.$router.push('/profile')
-        }
+        this.user.role === 0
+          ? this.$router.push("/admin")
+          : this.$router.push("/profile");
       } catch (e) {
-        console.log(e)
-
-        this.isLoading = false
+        console.log(e);
+        this.isLoading = false;
 
         this.$swal({
-          icon: 'error',
-          title: 'عذراً، تأكد من صحة بياناتك',
-          text: e,
+          icon: "error",
+          title: "عذراً، تأكد من صحة بياناتك",
           showConfirmButton: true,
-          confirmButtonText: 'حسناً',
-          confirmButtonColor: '#3498db'
-        })
+          confirmButtonText: "حسناً",
+          confirmButtonColor: "#3498db",
+        });
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

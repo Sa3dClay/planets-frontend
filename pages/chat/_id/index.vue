@@ -14,20 +14,12 @@
 
       <!-- str chat -->
       <div v-if="messages.length" v-chat-scroll class="chat pa-8">
-        <v-row
-          v-for="(message) in messages"
-          :key="message.id"
-          :dir="message.sender_id === user.id ? 'rtl' : 'ltr'"
-        >
+        <v-row v-for="(message) in messages" :key="message.id" :dir="message.sender_id === user.id ? 'rtl' : 'ltr'">
           <v-col cols="9" class="pa-1 ma-0">
-            <p
-              class="py-1 px-4 ma-0 textMessage d-inline-block"
-              :class="
-                message.sender_id === user.id
-                  ? 'float-right selfMessage'
-                  : 'float-left otherMessage'
-              "
-            >
+            <p class="py-1 px-4 ma-0 textMessage d-inline-block" :class="message.sender_id === user.id
+                ? 'float-right selfMessage'
+                : 'float-left otherMessage'
+              ">
               {{ message.message }}
             </p>
           </v-col>
@@ -37,15 +29,8 @@
 
       <!-- str new message form -->
       <v-form class="pa-4">
-        <v-text-field
-          v-model="newMessage"
-          label="اكتب رسالتك هنا..."
-        />
-        <v-btn
-          type="submit"
-          :disabled="!newMessage || isLoading"
-          @click.prevent="sendNewMessage"
-        >
+        <v-text-field v-model="newMessage" label="اكتب رسالتك هنا..." @focus="handleInputMessageFocus" />
+        <v-btn type="submit" :disabled="!newMessage || isLoading" @click.prevent="sendNewMessage">
           إرسال
         </v-btn>
       </v-form>
@@ -57,7 +42,7 @@
 <script>
 export default {
   middleware: 'auth',
-  data () {
+  data() {
     return {
       editDialog: false,
       newMessage: '',
@@ -66,29 +51,30 @@ export default {
       isLoading: false
     }
   },
-  mounted () {
+  mounted() {
     this.getFriendData()
     this.getMessages()
+    this.markPrevMessagesAsRead();
   },
   methods: {
-    async getFriendData () {
+    async getFriendData() {
       const res = await this.$axios.$get('/users/' + this.$route.params.id)
       this.listenForChatChannel(res.user.id)
       this.friend = res.user
     },
-    async getMessages () {
+    async getMessages() {
       const res = await this.$axios.$get(
         '/chat/messages/' + this.$route.params.id
       )
       this.messages = res.messages
     },
-    listenForChatChannel (friendId) {
+    listenForChatChannel(friendId) {
       this.$echo.channel('chat.' + friendId + '-' + this.user.id)
         .on('new-chat-message', (event) => {
           this.messages.push(event.message)
         })
     },
-    sendNewMessage () {
+    sendNewMessage() {
       this.isLoading = true
 
       this.$axios
@@ -105,7 +91,20 @@ export default {
           console.log(err)
           this.isLoading = false
         })
-    }
+    },
+    markPrevMessagesAsRead() {
+      this.$axios
+        .patch('/chat/messages/' + this.$route.params.id + '/read-prev-messages')
+        .then((res) => {
+          // TODO: change read marks in chat
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    handleInputMessageFocus() {
+      this.markPrevMessagesAsRead();
+    },
   }
 }
 </script>

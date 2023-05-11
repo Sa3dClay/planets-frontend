@@ -1,6 +1,6 @@
 <template>
   <div class="homePage">
-    <h1 class="py-12 myFont">مرحباً بكوكب البطيخ</h1>
+    <h1 class="py-12 myFont">مرحباً بكم في كوكب البطيخ</h1>
 
     <!-- guest -->
     <div v-if="!authenticated">

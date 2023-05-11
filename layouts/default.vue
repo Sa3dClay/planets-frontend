@@ -1,14 +1,9 @@
 <template>
   <v-app>
-    <v-navigation-drawer
-      v-if="authenticated"
-      v-model="drawer"
-      right
-      app
-    >
+    <v-navigation-drawer v-if="authenticated" v-model="drawer" right app>
       <v-list-item class="px-2">
         <v-list-item-avatar>
-          <v-img :src="require('~/assets/img/'+user.planet+'.png')" />
+          <v-img :src="require('~/assets/img/' + user.planet + '.png')" />
         </v-list-item-avatar>
 
         <v-list-item-title>{{ user.name }}</v-list-item-title>
@@ -31,6 +26,18 @@
             <v-list-item-title>{{ link.title }}</v-list-item-title>
           </v-list-item-content>
         </v-list-item>
+
+        <hr />
+
+        <v-list-item link @click.prevent="logout">
+          <v-list-item-icon>
+            <v-icon>mdi-logout</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>تسجيل الخروج</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
@@ -40,7 +47,9 @@
       <v-spacer />
 
       <div>
-        <v-btn color="red darken-2" dark @click.prevent="logout()">تسجيل الخروج</v-btn>
+        <v-btn icon to="/chat">
+          <v-icon>mdi-message-outline</v-icon>
+        </v-btn>
       </div>
     </v-app-bar>
 
@@ -51,29 +60,68 @@
           <nuxt />
         </div>
       </div>
+
+      <v-snackbar v-model="snackbar" :color="color" :timeout="timeout">
+        {{ snackbarText }}
+
+        <template v-slot:action="{ attrs }">
+          <v-btn color="white" text v-bind="attrs" @click="snackbar = false">
+            Close
+          </v-btn>
+        </template>
+      </v-snackbar>
     </v-main>
   </v-app>
 </template>
 
 <script>
+import { eventBus } from "@/plugins/event-bus.js";
+
 export default {
   data: () => ({
     drawer: false,
     links: [
-      { title: 'الرئيسية', icon: 'mdi-home', route: '/' },
-      { title: 'الصفحة الشخصية', icon: 'mdi-account', route: '/profile' },
-      { title: 'إضافة أصدقاء', icon: 'mdi-account-multiple-plus', route: '/friends' },
-      { title: 'تحدث مع الأصدقاء', icon: 'mdi-message-outline', route: '/chat' }
-    ]
+      { title: "الرئيسية", icon: "mdi-home", route: "/" },
+      { title: "الصفحة الشخصية", icon: "mdi-account", route: "/profile" },
+      {
+        title: "إضافة أصدقاء",
+        icon: "mdi-account-multiple-plus",
+        route: "/friends",
+      },
+      {
+        title: "تحدث مع الأصدقاء",
+        icon: "mdi-message-outline",
+        route: "/chat",
+      },
+    ],
+    snackbarText: "",
+    snackbar: false,
+    timeout: 6000,
+    color: "",
   }),
   methods: {
-    logout () {
+    async deleteFcmToken() {
+      await this.$axios.post("/users/delete-fcm-token");
+    },
+    logout() {
       try {
-        this.$auth.logout()
+        this.deleteFcmToken();
+
+        this.$auth.logout();
       } catch (e) {
-        console.log(e)
+        console.log(e);
       }
-    }
-  }
-}
+    },
+    handleShowSnackbar({ message, type }) {
+      this.snackbarText = message;
+      this.snackbar = true;
+      this.color = type;
+    },
+  },
+  created() {
+    eventBus.$on("show-snackbar", (data) => {
+      this.handleShowSnackbar(data);
+    });
+  },
+};
 </script>

@@ -1,4 +1,4 @@
-// import colors from 'vuetify/es5/util/colors'
+const fs = require('fs')
 
 export default {
   // Disable server-side rendering (https://go.nuxtjs.dev/ssr-mode)
@@ -40,7 +40,6 @@ export default {
 
   // Modules for dev and build (recommended) (https://go.nuxtjs.dev/config-modules)
   buildModules: [
-    // '@nuxtjs/eslint-module',
     '@nuxtjs/laravel-echo',
     '@nuxtjs/vuetify'
   ],
@@ -54,25 +53,33 @@ export default {
     plugins: ['~/plugins/echo.js']
   },
 
-  // echo ably configuration
-  // echo: {
-  //   broadcaster: 'pusher',
-  //   key: 'FwqzIw.pZxDYg:CDBZJRVQZE2RB2dPczj_jA6DBpsR9Uu2CKlAUrx2XZQ',
-  //   wsHost: 'realtime-pusher.ably.io',
-  //   wsPort: 443,
-  //   disableStats: true,
-  //   encrypted: true,
-  //   authEndpoint: 'http://localhost:8000/broadcasting/auth',
-  //   plugins: ['~/plugins/echo.js']
-  // },
-
   // Modules (https://go.nuxtjs.dev/config-modules)
   modules: [
     '@nuxtjs/pwa',
     '@nuxtjs/axios',
+    '@nuxtjs/firebase',
     '@nuxtjs/auth-next',
     'vue-sweetalert2/nuxt'
   ],
+
+  // Firebase module configuration
+  firebase: {
+    config: {
+      apiKey: 'AIzaSyC_13GGIE5ywHDi-yvTZ_izTK8aYZQPdbo',
+      authDomain: 'planets-bd6fe.firebaseapp.com',
+      projectId: 'planets-bd6fe',
+      storageBucket: 'planets-bd6fe.appspot.com',
+      messagingSenderId: '1068309836468',
+      appId: '1:1068309836468:web:9fd543df6260619550dde1'
+    },
+    services: {
+      messaging: {
+        createServiceWorker: true,
+        fcmPublicVapidKey: 'BCSgkQHwf0e64OyjnXrXasa47s0H4zrEZJXOvVB0r7l17B-RZK60dzZKHLGR-wiUPYEobGzKoVTYo-RCijchsTk',
+        inject: fs.readFileSync('./service-workers/firebase.js')
+      }
+    }
+  },
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
