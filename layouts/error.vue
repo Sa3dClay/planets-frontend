@@ -1,44 +1,39 @@
 <template>
   <v-app dark>
-    <h1 v-if="error.statusCode === 404">
-      {{ pageNotFound }}
-    </h1>
-    <h1 v-else>
-      {{ otherError }}
-    </h1>
-    <NuxtLink to="/">
-      Home page
-    </NuxtLink>
+    <div class="my-5">
+      <v-btn color="indigo white--text" to="/"
+        >العودة الى الصفحة الرئيسية</v-btn
+      >
+
+      <not-found />
+    </div>
   </v-app>
 </template>
 
 <script>
+import NotFound from "~/components/UI/NotFound.vue";
+
 export default {
-  layout: 'empty',
+  components: { NotFound },
+  layout: "empty",
   props: {
     error: {
       type: Object,
-      default: null
-    }
+      default: null,
+    },
   },
-  data () {
+  data() {
     return {
-      pageNotFound: '404 Not Found',
-      otherError: 'An error occurred'
-    }
+      pageNotFound: "عذراً هذه الصفحة غير موجودة",
+      otherError: "حدث خطأ ما",
+    };
   },
-  head () {
+  head() {
     const title =
-      this.error.statusCode === 404 ? this.pageNotFound : this.otherError
+      this.error.statusCode === 404 ? this.pageNotFound : this.otherError;
     return {
-      title
-    }
-  }
-}
+      title,
+    };
+  },
+};
 </script>
-
-<style scoped>
-h1 {
-  font-size: 20px;
-}
-</style>
