@@ -25,7 +25,6 @@
     position: relative;
     background-image: url(~assets/img/pg.jpg);
     background-size: cover;
-    min-height: 800px;
 }
 .pg-content {
     position: relative;

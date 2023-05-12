@@ -54,7 +54,7 @@
     </v-app-bar>
 
     <v-main>
-      <div class="pg">
+      <div class="pg" :style="{ minHeight: minHeight }">
         <div class="overlay" />
         <div class="pg-content">
           <nuxt />
@@ -80,6 +80,7 @@ import { eventBus } from "@/plugins/event-bus.js";
 export default {
   data: () => ({
     drawer: false,
+    minHeight: (window.innerHeight - 60) + 'px',
     links: [
       { title: "الرئيسية", icon: "mdi-home", route: "/" },
       { title: "الصفحة الشخصية", icon: "mdi-account", route: "/profile" },
