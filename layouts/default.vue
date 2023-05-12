@@ -80,7 +80,6 @@ import { eventBus } from "@/plugins/event-bus.js";
 export default {
   data: () => ({
     drawer: false,
-    minHeight: (window.innerHeight - 60) + 'px',
     links: [
       { title: "الرئيسية", icon: "mdi-home", route: "/" },
       { title: "الصفحة الشخصية", icon: "mdi-account", route: "/profile" },
@@ -100,6 +99,13 @@ export default {
     timeout: 6000,
     color: "",
   }),
+  computed: {
+    minHeight() {
+      return this.authenticated
+        ? window.innerHeight - 60 + "px"
+        : window.innerHeight + "px";
+    },
+  },
   methods: {
     async deleteFcmToken() {
       await this.$axios.post("/users/delete-fcm-token");
