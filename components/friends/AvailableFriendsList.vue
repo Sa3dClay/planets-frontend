@@ -1,7 +1,6 @@
 <template>
-  <v-card v-if="notRequestedUsers.length" class="my-4">
+  <v-card v-if="availableUsers.length" class="my-4">
     <v-card-title>إضافة أصدقاء</v-card-title>
-
     <v-card-text>
       <v-text-field
         label="Search"
@@ -12,13 +11,11 @@
         single-line
         hide-details
       />
-
       <v-list>
         <v-list-item v-for="user in filteredUsers" :key="user.id">
           <v-list-item-content>
             {{ user.name }}
           </v-list-item-content>
-
           <v-list-item-action>
             <v-btn
               color="primary"
@@ -36,39 +33,35 @@
 export default {
   data() {
     return {
-      notRequestedUsers: [],
+      availableUsers: [],
       search: "",
     };
   },
   mounted() {
-    this.getNotRequestedUsers();
+    this.getAvailableUsers();
   },
   computed: {
     filteredUsers() {
       if (!this.search) return [];
-
-      return this.notRequestedUsers.filter((user) =>
+      return this.availableUsers.filter((user) =>
         user.name.toLowerCase().includes(this.search.toLowerCase())
       );
     },
   },
   methods: {
-    async getNotRequestedUsers() {
-      const res = await this.$axios.$get("/users/not-requested-users");
-
-      this.notRequestedUsers = res.data;
+    async getAvailableUsers() {
+      const res = await this.$axios.$get("/users/friends/available");
+      this.availableUsers = res.data;
     },
     async requestFriendship(userId, userName) {
       try {
-        await this.$axios.$post("/users/send-friend-request/" + userId);
-
-        this.notRequestedUsers = this.notRequestedUsers.filter(
+        await this.$axios.$post("/users/friends/requests/send/" + userId);
+        this.availableUsers = this.availableUsers.filter(
           (user) => user.id !== userId
         );
-
         this.$swal({
           icon: "success",
-          title: " تم ارسال طلبك بنجاح الى" + userName,
+          title: "تم ارسال طلبك بنجاح الى " + userName,
           showConfirmButton: false,
           timer: 2000,
         });

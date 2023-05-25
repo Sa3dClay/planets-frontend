@@ -5,11 +5,17 @@
 </template>
 
 <script>
-import FriendsList from '~/components/friends/FriendsList.vue'
+import fcmMixin from "~/plugins/mixins/fcm";
+import FriendsList from "~/components/friends/FriendsList.vue";
 
 export default {
+  middleware: "auth",
+  mixins: [fcmMixin],
   components: {
-    FriendsList
-  }
-}
+    FriendsList,
+  },
+  mounted() {
+    this.setFcmToken();
+  },
+};
 </script>

@@ -2,16 +2,21 @@
   <v-card v-if="pendingRequestedUsers.length" class="my-4">
     <v-card-title>طلبات الصداقة المسبقة</v-card-title>
 
-    <!-- list of users those requested and pending -->
     <v-card-text>
       <v-list>
-        <v-list-item v-for="(user, index) in pendingRequestedUsers" :key="user.id">
+        <v-list-item
+          v-for="(user, index) in pendingRequestedUsers"
+          :key="user.id"
+        >
           <v-list-item-content>
             {{ user.name }}
           </v-list-item-content>
-
           <v-list-item-action>
-            <v-btn color="red darken-1 white--text" @click.prevent="cancelFriendship(user.id, index)">إلغاء</v-btn>
+            <v-btn
+              color="red darken-1 white--text"
+              @click.prevent="cancelFriendship(user.id, index)"
+              >إلغاء</v-btn
+            >
           </v-list-item-action>
         </v-list-item>
       </v-list>
@@ -21,29 +26,29 @@
 
 <script>
 export default {
-  data () {
+  data() {
     return {
-      pendingRequestedUsers: []
-    }
+      pendingRequestedUsers: [],
+    };
   },
-  mounted () {
-    this.getPendingRequestedUsers()
+  mounted() {
+    this.getPendingRequestedUsers();
   },
   methods: {
-    async getPendingRequestedUsers () {
-      const res = await this.$axios.$get('/users/pending-friend-request')
+    async getPendingRequestedUsers() {
+      const res = await this.$axios.$get("/users/friends/requests/pending");
 
-      this.pendingRequestedUsers = res.data
+      this.pendingRequestedUsers = res.data;
     },
-    async cancelFriendship (userId, index) {
+    async cancelFriendship(userId, index) {
       try {
-        await this.$axios.$post('/users/remove-friend/' + userId)
+        await this.$axios.$post("/users/friends/remove/" + userId);
 
-        this.pendingRequestedUsers.splice(index, 1)
+        this.pendingRequestedUsers.splice(index, 1);
       } catch (error) {
-        console.error(error)
+        console.error(error);
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>

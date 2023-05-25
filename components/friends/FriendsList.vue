@@ -25,6 +25,15 @@
                 </v-btn>
               </v-badge>
             </v-list-item-action>
+
+            <v-list-item-action>
+              <v-btn
+                color="green darken-1 white--text"
+                :to="'/users/' + user.id"
+              >
+                الصفحة الشخصية
+              </v-btn>
+            </v-list-item-action>
           </v-list-item>
         </v-list>
       </v-card-text>
@@ -54,6 +63,7 @@ export default {
     async getFriends() {
       try {
         const res = await this.$axios.$get("/users/friends");
+
         this.friends = res.data;
       } catch (e) {
         console.log(e);
