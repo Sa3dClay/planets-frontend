@@ -15,11 +15,16 @@
       <!-- str chat -->
       <div v-if="messages.length" v-chat-scroll class="chat pa-8">
         <v-row
-          v-for="message in messages"
+          v-for="(message, index) in messages"
           :key="message.id"
           :dir="message.sender_id === user.id ? 'rtl' : 'ltr'"
         >
-          <v-col cols="9" class="pa-1 ma-0">
+          <v-col
+            cols="9"
+            class="pa-1 ma-0 relative"
+            @mouseover="hoveredMessageId = message.id"
+            @mouseleave="hoveredMessageId = null"
+          >
             <p
               class="py-1 px-4 ma-0 textMessage d-inline-block"
               :class="
@@ -30,6 +35,25 @@
             >
               {{ message.message }}
             </p>
+
+            <div
+              v-if="
+                hoveredMessageId === message.id && message.sender_id !== user.id
+              "
+              class="message-reactions"
+            >
+              <div
+                v-for="reaction in reactions"
+                :key="reaction.id"
+                @click="setMessageReaction(reaction.text, message.id, index)"
+              >
+                {{ reaction.emoji }}
+              </div>
+            </div>
+
+            <div v-if="message.reaction" class="selected-reaction">
+              {{ reactionEmoji(message.reaction) }}
+            </div>
           </v-col>
         </v-row>
       </div>
@@ -55,6 +79,30 @@
   </v-container>
 </template>
 
+<style lang="scss" scoped>
+.relative {
+  position: relative;
+}
+.message-reactions {
+  position: absolute;
+  display: flex;
+  top: -15px;
+  left: 0;
+  gap: 4px;
+  z-index: 1;
+
+  div {
+    cursor: pointer;
+  }
+}
+.selected-reaction {
+  position: absolute;
+  font-size: 15px;
+  bottom: -10px;
+  left: 5px;
+}
+</style>
+
 <script>
 import fcmMixin from "~/plugins/mixins/fcm";
 
@@ -68,6 +116,14 @@ export default {
       messages: [],
       friend: {},
       isLoading: false,
+      hoveredMessageId: null,
+      reactions: [
+        { id: 1, text: "love", emoji: "❤️" },
+        { id: 2, text: "haha", emoji: "😆" },
+        { id: 3, text: "wow", emoji: "😲" },
+        { id: 4, text: "sad", emoji: "😢" },
+        { id: 5, text: "angry", emoji: "😠" },
+      ],
     };
   },
   mounted() {
@@ -87,6 +143,25 @@ export default {
         "/chat/messages/" + this.$route.params.id
       );
       this.messages = res.messages;
+    },
+    setMessageReaction(reactionText, messageId, messageIndex) {
+      this.$axios
+        .post("/chat/messages/react/" + messageId, { reaction: reactionText })
+        .then((res) => {
+          this.messages[messageIndex] = res.data.message;
+
+          this.hoveredMessageId = null;
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    },
+    reactionEmoji(reactionText) {
+      const selectedReaction = this.reactions.find(
+        (reaction) => reaction.text === reactionText
+      );
+
+      if (selectedReaction) return selectedReaction.emoji;
     },
     listenForChatChannel(friendId) {
       this.$echo
