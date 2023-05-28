@@ -91,15 +91,14 @@
   gap: 4px;
   z-index: 1;
 
-  div {
+  > div {
     cursor: pointer;
   }
 }
 .selected-reaction {
   position: absolute;
   font-size: 15px;
-  bottom: -10px;
-  left: 5px;
+  bottom: -8px;
 }
 </style>
 
@@ -149,7 +148,6 @@ export default {
         .post("/chat/messages/react/" + messageId, { reaction: reactionText })
         .then((res) => {
           this.messages[messageIndex] = res.data.message;
-
           this.hoveredMessageId = null;
         })
         .catch((err) => {
