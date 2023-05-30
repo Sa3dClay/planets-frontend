@@ -33,13 +33,15 @@
                   : 'float-left otherMessage'
               "
             >
+              <span v-show="isSelfMessage(message.sender_id)">
+                <v-icon v-if="message.unread" small>mdi-check</v-icon>
+
+                <v-icon v-else small color="green accent-3"
+                  >mdi-check-all</v-icon
+                >
+              </span>
+
               {{ message.message }}
-              <v-icon
-                small
-                v-show="!isSelfMessage(message.sender_id)"
-                :color="message.unread ? 'grey' : 'blue'"
-                >mdi-check-all</v-icon
-              >
             </p>
 
             <div
