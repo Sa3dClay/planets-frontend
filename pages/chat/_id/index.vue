@@ -17,7 +17,7 @@
         <v-row
           v-for="(message, index) in messages"
           :key="message.id"
-          :dir="message.sender_id === user.id ? 'rtl' : 'ltr'"
+          :dir="isSelfMessage(message.sender_id) ? 'rtl' : 'ltr'"
         >
           <v-col
             cols="9"
@@ -28,17 +28,24 @@
             <p
               class="py-1 px-4 ma-0 textMessage d-inline-block"
               :class="
-                message.sender_id === user.id
+                isSelfMessage(message.sender_id)
                   ? 'float-right selfMessage'
                   : 'float-left otherMessage'
               "
             >
               {{ message.message }}
+              <v-icon
+                small
+                v-show="!isSelfMessage(message.sender_id)"
+                :color="message.unread ? 'grey' : 'blue'"
+                >mdi-check-all</v-icon
+              >
             </p>
 
             <div
               v-if="
-                hoveredMessageId === message.id && message.sender_id !== user.id
+                hoveredMessageId === message.id &&
+                !isSelfMessage(message.sender_id)
               "
               class="message-reactions"
             >
@@ -198,6 +205,9 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+    },
+    isSelfMessage(senderId) {
+      return senderId === this.user.id;
     },
     handleInputMessageFocus() {
       this.markPrevMessagesAsRead();
