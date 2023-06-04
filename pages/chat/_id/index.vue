@@ -144,6 +144,7 @@ export default {
     async getFriendData() {
       const res = await this.$axios.$get("/users/" + this.$route.params.id);
       this.listenForChatChannel(res.user.id);
+      this.listenForReadChannel(res.user.id);
       this.friend = res.user;
     },
     async getMessages() {
@@ -175,6 +176,13 @@ export default {
         .channel("chat." + friendId + "-" + this.user.id)
         .on("new-chat-message", (event) => {
           this.messages.push(event.message);
+        });
+    },
+    listenForReadChannel(friendId) {
+      this.$echo
+        .channel("read." + this.user.id + "-" + friendId)
+        .on("read-chat-messages", (event) => {
+          this.getMessages();
         });
     },
     sendNewMessage() {
