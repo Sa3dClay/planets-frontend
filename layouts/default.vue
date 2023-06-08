@@ -54,7 +54,7 @@
     </v-app-bar>
 
     <v-main>
-      <div class="pg" :style="{ minHeight: minHeight }">
+      <div class="pg" :style="{ minHeight: '100vh' }">
         <div class="overlay" />
         <div class="pg-content">
           <nuxt />
